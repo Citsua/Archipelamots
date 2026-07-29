@@ -1,0 +1,37 @@
+{
+  "name": "mots-fleches",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "corpus.json"
+  ],
+  "scripts": {
+    "clean": "rm -rf dist",
+    "build": "tsc",
+    "lint": "tsc --noEmit",
+    "test:gen": "tsx test-generator.ts"
+  },
+  "dependencies": {
+    "@google/genai": "^2.4.0",
+    "axios": "^1.19.0",
+    "cheerio": "^1.2.0",
+    "dotenv": "^17.2.3",
+    "js-yaml": "^5.2.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.19.19",
+    "autoprefixer": "^10.4.21",
+    "tsx": "^4.21.0",
+    "typescript": "~5.8.2"
+  }
+}

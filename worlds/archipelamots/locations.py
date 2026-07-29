@@ -1,4 +1,5 @@
 from __future__ import annotations
+from javascript import require
 
 from typing import TYPE_CHECKING
 
@@ -29,7 +30,6 @@ LOCATION_NAME_TO_ID = {
 # To make this simple, it is common practice to subclass the basic Location class and override the "game" field.
 class ArchipelamotsLocation(Location):
     game = "Archipelamots"
-    
 
 # Let's make one more helper method before we begin actually creating locations.
 # Later on in the code, we'll want specific subsections of LOCATION_NAME_TO_ID.

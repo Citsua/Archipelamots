@@ -1,0 +1,8 @@
+node_modules/
+.env
+*.log
+npm-debug.log*
+
+# Build output (dist/) is intentionally NOT ignored: it is committed so that
+# flopobot_v2 can consume this package via "file:../mots-fleches" without a
+# TypeScript build step on the server. Run `npm run build` before committing.
