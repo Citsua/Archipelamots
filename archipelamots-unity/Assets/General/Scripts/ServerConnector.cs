@@ -6,7 +6,7 @@ using System;
 using System.Collections.ObjectModel;
 using UnityEngine;
 
-public class Test : MonoBehaviour
+public class ServerConnector : MonoBehaviour
 {
     public string server;
     public int port;

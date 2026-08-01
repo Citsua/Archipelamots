@@ -30,8 +30,15 @@ for (var i = 0; i < doc.Archipelamots.total_nb_of_grids; i++) {
     correct = true;
     console.log(`trying to generate`);
     var result = generate(getAllWords(), 6, 6);
-    result.defCells = Array.from(result.defCells);
+    var defCellsArray = [];
+    for (let [key, value] of result.defCells.entries()) {
+      var coords = key.split(',');
+      var defCell = { coords: {r: parseInt(coords[0]), c: parseInt(coords[1])}, definitions: value };
+      defCellsArray.push(defCell);
+    }
+
     result.definitions = [];
+    result.defCells = defCellsArray;
     for (var j = 0; j < result.slots.length; j++) {
       var element = result.slots[j];
       var word = "";
