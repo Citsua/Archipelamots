@@ -1,15 +1,16 @@
 import { generate, getAllWords } from 'mots-fleches'
-import { load } from 'js-yaml'
-import { readFileSync } from 'node:fs'
-import { readdirSync } from 'node:fs'
+import { load, dump } from 'js-yaml'
+import { readFileSync, readdirSync, writeFileSync } from 'node:fs'
 import * as cheerio from 'cheerio'
 import axios from 'axios'
+
+import * as util from 'util'
 
 const apikey = '848a1f75297c3fa2f07b672692e059f21eac38a2';
 var folderPath = process.cwd();
 
 // find YAML file
-var files = readdirSync(`${folderPath}\\yaml`).filter(fn => fn.endsWith('.yaml'));
+var files = readdirSync(`${folderPath}\\yaml`).filter(fn => fn.endsWith('.yaml') && !fn.includes('-generated'));
 if (files.length != 1) {
   throw "There should be exactly one YAML file in the folder.";
 }
@@ -17,7 +18,7 @@ if (files.length != 1) {
 // read YAML file
 var filePath = `${folderPath}\\yaml\\${files[0]}`;
 console.log(`yaml file: ${filePath}`);
-const doc = load(readFileSync(filePath, 'utf8'));
+var doc = load(readFileSync(filePath, 'utf8'));
 console.log(doc);
 
 var grids = [];
@@ -29,6 +30,7 @@ for (var i = 0; i < doc.Archipelamots.total_nb_of_grids; i++) {
     correct = true;
     console.log(`trying to generate`);
     var result = generate(getAllWords(), 6, 6);
+    result.defCells = Array.from(result.defCells);
     result.definitions = [];
     for (var j = 0; j < result.slots.length; j++) {
       var element = result.slots[j];
@@ -68,7 +70,6 @@ for (var i = 0; i < doc.Archipelamots.total_nb_of_grids; i++) {
 
     if (correct) {
       grids.push(result);
-      console.log(result);
     }
 
   } while (!correct);
@@ -77,7 +78,15 @@ for (var i = 0; i < doc.Archipelamots.total_nb_of_grids; i++) {
 console.log("generated all grids")
 
 // add the grids into the yaml
-// TODO
+doc.Archipelamots["grids"] = grids;
+console.log(util.inspect(doc, {showHidden: false, depth: null, colors: true}))
+var newFilePath = `${filePath.substring(0, filePath.indexOf('.yaml'))}-generated.yaml`;
+writeFileSync(newFilePath, dump(doc), (err) => {
+    if (err) {
+        console.log(err);
+    }
+});
+
 
 function getRandomInt(min, max) {
     min = Math.ceil(min);
