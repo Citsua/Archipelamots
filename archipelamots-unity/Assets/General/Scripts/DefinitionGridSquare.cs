@@ -9,8 +9,8 @@ public abstract class DefinitionGridSquare : GridSquare
         this.secondarySelected.SetActive(true);
     }
 
-    public void Deselect()
+    public override void Deselect()
     {
-        this.secondarySelected.SetActive(false);
+        //this.secondarySelected.SetActive(false);
     }
 }

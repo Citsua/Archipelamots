@@ -46,6 +46,13 @@ class NbOfStartingGrids(Range):
     range_end = 100
     default = 3
 
+class PercentageOfDefinitionsUnlockedAtStart(Range):
+    display_name = "Percentage of definitions unlocked at the start of a grid"
+
+    range_start = 0
+    range_end = 100
+    default = 30
+
 # We must now define a dataclass inheriting from PerGameCommonOptions that we put all our options in.
 # This is in the format "option_name_in_snake_case: OptionClassName".
 @dataclass

@@ -148,6 +148,7 @@ GameObject:
   - component: {fileID: 2736728466223264865}
   - component: {fileID: 6011481092217229353}
   - component: {fileID: 8078378912027280463}
+  - component: {fileID: 2522294871312894678}
   m_Layer: 5
   m_Name: Arrow
   m_TagString: Untagged
@@ -196,7 +197,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -212,6 +213,26 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1818360608 &2522294871312894678
+PositionConstraint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2049310853608038416}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Weight: 1
+  m_TranslationAtRest: {x: 50, y: 0, z: 0}
+  m_TranslationOffset: {x: 50, y: 0, z: 0}
+  m_AffectTranslationX: 1
+  m_AffectTranslationY: 1
+  m_AffectTranslationZ: 1
+  m_Active: 1
+  m_IsLocked: 1
+  m_Sources:
+  - sourceTransform: {fileID: 6314088887571587047}
+    weight: 1
 --- !u!1 &2849801571214762274
 GameObject:
   m_ObjectHideFlags: 0
@@ -351,6 +372,7 @@ GameObject:
   - component: {fileID: 8089249295480218316}
   - component: {fileID: 111194737904965981}
   - component: {fileID: 240965956710218983}
+  - component: {fileID: 4170066081987766982}
   m_Layer: 5
   m_Name: Arrow
   m_TagString: Untagged
@@ -399,7 +421,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -415,6 +437,26 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1818360608 &4170066081987766982
+PositionConstraint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3617206549263387360}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Weight: 1
+  m_TranslationAtRest: {x: 0, y: -50, z: 0}
+  m_TranslationOffset: {x: 0, y: -50, z: 0}
+  m_AffectTranslationX: 1
+  m_AffectTranslationY: 1
+  m_AffectTranslationZ: 1
+  m_Active: 1
+  m_IsLocked: 1
+  m_Sources:
+  - sourceTransform: {fileID: 4846334103330951659}
+    weight: 1
 --- !u!1 &4112668744308581576
 GameObject:
   m_ObjectHideFlags: 0

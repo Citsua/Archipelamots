@@ -1,5 +1,6 @@
 ﻿using TMPro;
 using UnityEngine;
+using UnityEngine.Animations;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -43,12 +44,7 @@ public class DefinitionSubSquare : MonoBehaviour, IPointerClickHandler
                 break;
         }
 
-        this.Invoke(nameof(this.SetArrowOnTop), Time.fixedDeltaTime);
-    }
-
-    private void SetArrowOnTop()
-    {
-        this.arrow.transform.SetParent(CrosswordGrid.Instance.transform.parent, true);
+        this.arrow.transform.SetParent(CrosswordGrid.Instance.transform, true);
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -59,6 +55,7 @@ public class DefinitionSubSquare : MonoBehaviour, IPointerClickHandler
 
     public void OnClick()
     {
-        CrosswordGrid.Instance.Select(this.ParentSquare, this.Direction);
+        CrosswordGrid.Instance.LastClicked = this.ParentSquare;
+        CrosswordGrid.Instance.Select(this);
     }
 }

@@ -12,4 +12,6 @@ public abstract class GridSquare : MonoBehaviour
         this.R = r;
         this.C = c;
     }
+
+    public abstract void Deselect();
 }

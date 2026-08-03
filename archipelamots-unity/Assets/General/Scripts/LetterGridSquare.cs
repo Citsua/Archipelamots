@@ -9,12 +9,14 @@ public class LetterGridSquare : GridSquare, IPointerClickHandler
     [SerializeField] private GameObject secondarySelected;
     [SerializeField] private GameObject lockedIn;
 
-    public bool LockedIn { get; private set; }
+    public bool LockedIn { get; private set; } = false;
 
     public override void Initialize(int r, int c)
     {
         base.Initialize(r, c);
         this.text.text = string.Empty;
+        this.mainSelected.SetActive(false);
+        this.secondarySelected.SetActive(false);
     }
 
     public void OnClick()
@@ -67,7 +69,7 @@ public class LetterGridSquare : GridSquare, IPointerClickHandler
         this.secondarySelected.SetActive(true);
     }
 
-    public void Deselect()
+    public override void Deselect()
     {
         this.mainSelected.SetActive(false);
         this.secondarySelected.SetActive(false);
