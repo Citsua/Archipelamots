@@ -3,11 +3,12 @@ using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Helpers;
 using Archipelago.MultiClient.Net.Models;
 using System;
-using System.Collections.ObjectModel;
 using UnityEngine;
 
 public class ServerConnector : MonoBehaviour
 {
+    public static ServerConnector Instance { get; private set; }
+
     public string server;
     public int port;
     public string user;
@@ -15,16 +16,27 @@ public class ServerConnector : MonoBehaviour
 
     private ArchipelagoSession session;
 
+    // Necessary for static variables to work correctly when domain reload is disabled
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static private void Init()
+    {
+        Instance = null;
+    }
+
+    private void Awake()
+    {
+        if (Instance != null)
+            throw new System.Exception($"{this.GetType()} Singleton already exists in the scene");
+        Instance = this;
+    }
+
     private void Start()
     {
         Debug.Log("start");
         this.session = Connect(this.server, this.port, this.user, this.password);
         if (this.session != null)
         {
-            session.Items.ItemReceived += OnItemReceived;
-            session.Locations.CheckedLocationsUpdated += this.OnCheckedLocationsUpdated;
-            this.session.Locations.CompleteLocationChecks(1);
-            Debug.Log("complete loc 1");
+            this.session.Items.ItemReceived += this.OnItemReceived;
         }
     }
 
@@ -34,12 +46,10 @@ public class ServerConnector : MonoBehaviour
         Debug.Log("received item " + info.ItemName);
     }
 
-    private void OnCheckedLocationsUpdated(ReadOnlyCollection<long> newCheckedLocations)
+    public void SendLocationCheck(int location)
     {
-        foreach (long i in newCheckedLocations)
-        {
-            Debug.Log("checked location " + i);
-        }
+        Debug.Log("completed check " + this.session.Locations.GetLocationNameFromId(location));
+        this.session.Locations.CompleteLocationChecks(location);
     }
 
     private static ArchipelagoSession Connect(string server, int port, string user, string password)

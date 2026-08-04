@@ -8,6 +8,7 @@ Archipelamots:
   percentage_of_grids_to_win: 80
   nb_of_checks_per_grid: 3
   nb_of_starting_grids: 1
+  percentage_of_definitions_unlocked_at_start: 30
   local_items: []
   non_local_items: []
   start_inventory: {}

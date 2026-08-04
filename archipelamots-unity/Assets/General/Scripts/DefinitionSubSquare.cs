@@ -8,19 +8,22 @@ public class DefinitionSubSquare : MonoBehaviour, IPointerClickHandler
 {
     [SerializeField] private TMP_Text text;
     [SerializeField] private Image arrow;
+    [SerializeField] private GameObject notRevealedBackground;
 
     public DefinitionGridSquare ParentSquare { get; private set; }
     public int StartingR { get; private set; }
     public int StartingC { get; private set; }
     public Direction Direction { get; private set; }
 
-    public void Initialize(DefinitionGridSquare parentSquare, string definition, char arrow)
+    public void Initialize(DefinitionGridSquare parentSquare, Archipelamots.DefCellInfo defCellInfo)
     {
+        Archipelamots.Definition definition = YAMLLoader.Instance.Grids[CrosswordGrid.Instance.GridNb].GetDefinition(defCellInfo.word, out int index);
         this.ParentSquare = parentSquare;
-        this.text.text = definition;
-        this.arrow.sprite = CrosswordGrid.Instance.arrowSprites.Find(x => x.character == arrow).sprite;
+        this.text.text = definition.revealed ? definition.definition : $"DEFINITION N°{index}";
+        this.notRevealedBackground.SetActive(!definition.revealed);
+        this.arrow.sprite = CrosswordGrid.Instance.arrowSprites.Find(x => x.character == defCellInfo.arrow).sprite;
 
-        switch (arrow)
+        switch (defCellInfo.arrow)
         {
             case '→':
                 this.Direction = Direction.Horizontal;

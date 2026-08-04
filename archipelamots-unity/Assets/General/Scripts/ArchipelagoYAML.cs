@@ -19,6 +19,7 @@ public class Archipelamots
     public int percentage_of_grids_to_win;
     public int nb_of_checks_per_grid;
     public int nb_of_starting_grids;
+    public int percentage_of_definitions_unlocked_at_start;
 
     public string[] local_items;
     public string[] non_local_items;
@@ -41,9 +42,18 @@ public class Archipelamots
         public long generationTimeMs;
         public Definition[] definitions;
 
-        public string GetDefinition(string word)
+        public Definition GetDefinition(string word, out int index)
         {
-            return this.definitions.First(x => x.word == word).definition;
+            for (int i = 0; i < this.definitions.Length; i++)
+            {
+                if (this.definitions[i].word == word)
+                {
+                    index = i;
+                    return this.definitions[i];
+                }
+            }
+
+            throw new System.Exception($"Could not find definition for word {word}");
         }
     }
 
@@ -64,6 +74,7 @@ public class Archipelamots
     {
         public string word;
         public string definition;
+        public bool revealed;
     }
 
     public class Slot

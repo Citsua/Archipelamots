@@ -94,16 +94,13 @@ public class CrosswordGrid : MonoBehaviour
                     if (defcell.definitions.Length == 1)
                     {
                         DefinitionGridSquareFull gridSquare = Instantiate(this.definitionGridSquareFullPrefab, this.gridLayout.transform);
-                        gridSquare.Initialize(r, c, YAMLLoader.Instance.Grids[gridNb].GetDefinition(defcell.definitions[0].word), defcell.definitions[0].arrow);
+                        gridSquare.Initialize(r, c, defcell.definitions[0]);
                         this.gridSquares[r, c] = gridSquare;
                     }
                     else
                     {
                         DefinitionGridSquareShared gridSquare = Instantiate(this.definitionGridSquareSharedPrefab, this.gridLayout.transform);
-                        gridSquare.Initialize(r, c, 
-                            YAMLLoader.Instance.Grids[gridNb].GetDefinition(defcell.definitions[0].word), defcell.definitions[0].arrow,
-                            YAMLLoader.Instance.Grids[gridNb].GetDefinition(defcell.definitions[1].word), defcell.definitions[1].arrow
-                        );
+                        gridSquare.Initialize(r, c, defcell.definitions[0], defcell.definitions[1]);
                         this.gridSquares[r, c] = gridSquare;
                     }
                 }
@@ -243,6 +240,10 @@ public class CrosswordGrid : MonoBehaviour
             if (this.gridSquares[r, c] is LetterGridSquare)
             {
                 lastValidLetter = this.gridSquares[r, c] as LetterGridSquare;
+            }
+            else
+            {
+                return lastValidLetter;
             }
 
             if (direction == Direction.Horizontal)

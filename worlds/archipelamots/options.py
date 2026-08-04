@@ -61,3 +61,4 @@ class ArchipelamotsOptions(PerGameCommonOptions):
     percentage_of_grids_to_win: PercentageOfGridsToWin
     nb_of_checks_per_grid: NbOfChecksPerGrid
     nb_of_starting_grids: NbOfStartingGrids
+    percentage_of_definitions_unlocked_at_start: PercentageOfDefinitionsUnlockedAtStart
