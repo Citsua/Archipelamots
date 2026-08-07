@@ -14,16 +14,16 @@ if TYPE_CHECKING:
 # We will have a lookup from location name to ID here that, in world.py, we will import and bind to the world class.
 # Even if a location doesn't exist on specific options, it must be present in this lookup.
 def generate_locations() -> dict[str, int]:
-    dict = {}
+    dictionary = {}
     id = 1
     for x in range(TotalNbOfGrids.range_end):
         for y in range(NbOfChecksPerGrid.range_end):
-            dict[f"Complete Grid n°{str(x + 1)} ({str(y + 1)})"] = id
+            dictionary[f"Complete Grid n°{str(x + 1)} ({str(y + 1)})"] = id
             id += 1
         for y in range(50):
-            dict[f"Complete Word n°{str(y + 1)} in Grid n°{str(x + 1)} ({str(y + 1)})"] = id
+            dictionary[f"Complete Word n°{str(y + 1)} in Grid n°{str(x + 1)} ({str(y + 1)})"] = id
             id += 1
-    return dict
+    return dictionary
 
 LOCATION_NAME_TO_ID = generate_locations()
 
@@ -52,8 +52,8 @@ def create_regular_locations(world: ArchipelamotsWorld) -> None:
         region = world.get_region("Grid n°" + str(x + 1))
         for y in range(world.options.nb_of_checks_per_grid):
             region.add_locations(get_location_names_with_ids([f"Complete Grid n°{str(x + 1)} ({str(y + 1)})"]), ArchipelamotsLocation)
-        for y in range(50):
-                region.add_locations(get_location_names_with_ids([f"Complete Word n°{str(y + 1)} in Grid n°{str(x + 1)} ({str(y + 1)})"]), ArchipelamotsLocation)
+        for y in range(len(world.grids_data[x]["slots"])):
+            region.add_locations(get_location_names_with_ids([f"Complete Word n°{str(y + 1)} in Grid n°{str(x + 1)} ({str(y + 1)})"]), ArchipelamotsLocation)
 
 
 def create_events(world: ArchipelamotsWorld) -> None:

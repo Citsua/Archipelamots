@@ -29,7 +29,7 @@ for (var i = 0; i < doc.Archipelamots.total_nb_of_grids; i++) {
   do {
     correct = true;
     console.log(`trying to generate`);
-    var result = generate(getAllWords(), 10, 10);
+    var result = generate(getAllWords(), 6, 12);
     console.log(result);
     var defCellsArray = [];
     for (let [key, value] of result.defCells.entries()) {
@@ -89,7 +89,10 @@ for (var i = 0; i < doc.Archipelamots.total_nb_of_grids; i++) {
 console.log("generated all grids")
 
 // add the grids into the yaml
-doc.Archipelamots["grids"] = grids;
+/*var gridData = {};
+gridData["data"] = grids;
+doc.Archipelamots["grid_data"] = gridData;*/
+doc.Archipelamots["grid_data"] = dump(grids);
 console.log(util.inspect(doc, {showHidden: false, depth: null, colors: true}))
 var newFilePath = `${filePath.substring(0, filePath.indexOf('.yaml'))}-generated.yaml`;
 writeFileSync(newFilePath, dump(doc), (err) => {

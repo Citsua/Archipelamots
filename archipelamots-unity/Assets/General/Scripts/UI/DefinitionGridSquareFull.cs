@@ -5,9 +5,9 @@ public class DefinitionGridSquareFull : DefinitionGridSquare
     [SerializeField] private DefinitionSubSquare subSquareBottom;
     [SerializeField] private DefinitionSubSquare subSquareRight;
 
-    public void Initialize(int r, int c, Archipelamots.DefCellInfo defInfo)
+    public void Initialize(CrosswordGrid grid, int r, int c, YAML.DefCellInfo defInfo)
     {
-        base.Initialize(r, c);
+        base.Initialize(grid, r, c);
         DefinitionSubSquare subSquare = this.subSquareBottom;
         if (defInfo.arrow == '→' || defInfo.arrow == '⤵')
             subSquare = this.subSquareRight;

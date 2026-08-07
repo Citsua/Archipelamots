@@ -1,6 +1,10 @@
-from dataclasses import dataclass
+from __future__ import annotations
 
-from Options import Choice, OptionGroup, FreeText, PerGameCommonOptions, Range, Toggle, Visibility
+
+import typing
+from dataclasses import dataclass
+import typing
+from Options import Choice, OptionGroup, FreeText, PerGameCommonOptions, Range, Toggle, Visibility, Option
 
 # In this file, we define the options the player can pick.
 # The most common types of options are Toggle, Range and Choice.
@@ -53,8 +57,8 @@ class PercentageOfDefinitionsUnlockedAtStart(Range):
     range_end = 100
     default = 30
 
-class Base64FileContents(FreeText):
-    visibility = Visibility.none
+class GridData(FreeText):
+    Visibility = Visibility.none
 
 # We must now define a dataclass inheriting from PerGameCommonOptions that we put all our options in.
 # This is in the format "option_name_in_snake_case: OptionClassName".
@@ -65,4 +69,4 @@ class ArchipelamotsOptions(PerGameCommonOptions):
     nb_of_checks_per_grid: NbOfChecksPerGrid
     nb_of_starting_grids: NbOfStartingGrids
     percentage_of_definitions_unlocked_at_start: PercentageOfDefinitionsUnlockedAtStart
-    grid_data: Base64FileContents
+    grid_data: GridData

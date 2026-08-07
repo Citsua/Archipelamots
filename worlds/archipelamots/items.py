@@ -12,17 +12,17 @@ if TYPE_CHECKING:
 # We will have a lookup from item name to ID here that, in world.py, we will import and bind to the world class.
 # Even if an item doesn't exist on specific options, it must be present in this lookup.
 def generate_items() -> dict[str, int]:
-    dict = {}
+    dictionary = {}
     id = 1
     for x in range(TotalNbOfGrids.range_end):
-        dict[f"Grid n°{str(x + 1)}"] = id
+        dictionary[f"Grid n°{str(x + 1)}"] = id
         id += 1
         for y in range(50):
-            dict[f"Definition n°{str(y + 1)} from Grid n°{str(x + 1)}"] = id
+            dictionary[f"Definition n°{str(y + 1)} from Grid n°{str(x + 1)}"] = id
             id += 1
-    dict["Letter Reveal"] = 10001
-    dict["Word Check"] = 10002
-    return dict
+    dictionary["Letter Reveal"] = 10001
+    dictionary["Word Check"] = 10002
+    return dictionary
 
 ITEM_NAME_TO_ID = generate_items()
 
@@ -70,6 +70,9 @@ def create_all_items(world: ArchipelamotsWorld) -> None:
     for x in range(world.options.total_nb_of_grids):
         item = world.create_item(f"Grid n°{str(x + 1)}")
         itempool.append(item)
+        for y in range(len(world.grids_data[x]["slots"])):
+            item = world.create_item(f"Definition n°{str(y + 1)} from Grid n°{str(x + 1)}")
+            itempool.append(item)
 
     # Archipelago requires that each world submits as many locations as it submits items.
     # This is where we can use our filler and trap items.

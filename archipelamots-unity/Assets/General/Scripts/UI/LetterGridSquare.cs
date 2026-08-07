@@ -11,9 +11,9 @@ public class LetterGridSquare : GridSquare, IPointerClickHandler
 
     public bool LockedIn { get; private set; } = false;
 
-    public override void Initialize(int r, int c)
+    public override void Initialize(CrosswordGrid grid, int r, int c)
     {
-        base.Initialize(r, c);
+        base.Initialize(grid, r, c);
         this.text.text = string.Empty;
         this.mainSelected.SetActive(false);
         this.secondarySelected.SetActive(false);
@@ -21,13 +21,13 @@ public class LetterGridSquare : GridSquare, IPointerClickHandler
 
     public void OnClick()
     {
-        if (CrosswordGrid.Instance.LastClicked == this)
+        if (this.Grid.LastClicked == this)
         {
-            CrosswordGrid.Instance.SwitchDirection();
+            this.Grid.SwitchDirection();
         }
 
-        CrosswordGrid.Instance.LastClicked = this;
-        CrosswordGrid.Instance.Select(this);
+        this.Grid.LastClicked = this;
+        this.Grid.Select(this);
     }
 
     public void OnRightClick()
@@ -35,26 +35,35 @@ public class LetterGridSquare : GridSquare, IPointerClickHandler
         this.Erase();
     }
 
-    public void Set(char letter)
+    public void Set(char letter, bool save = true)
     {
         if (this.LockedIn)
             return;
 
         this.text.text = letter.ToString();
+
+        if (save)
+            SavingUtility.SaveGridCharacter(this, letter);
     }
 
-    public void Erase()
+    public void Erase(bool save = true)
     {
         if (this.LockedIn)
             return;
 
         this.text.text = string.Empty;
+
+        if (save)
+            SavingUtility.SaveGridCharacter(this, '\0');
     }
 
-    public void LockIn()
+    public void LockIn(bool save = true)
     {
         this.LockedIn = true;
         this.lockedIn.SetActive(true);
+
+        if (save)
+            SavingUtility.SaveGridCharacter(this, this.text.text[0]);
     }
 
     public void MainSelect()

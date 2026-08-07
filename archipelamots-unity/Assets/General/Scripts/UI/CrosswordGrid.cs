@@ -29,9 +29,8 @@ public class CrosswordGrid : MonoBehaviour
 
     [SerializeField] public List<ArrowSprite> arrowSprites = new List<ArrowSprite>();
 
-    private GridSquare[,] gridSquares;
-
     public int GridNb { get; private set; }
+    public GridSquare[,] GridSquares { get; private set; }
 
     public GridSquare LastClicked { get; set; }
     public Direction CurrentDirection { get; private set; }
@@ -94,39 +93,41 @@ public class CrosswordGrid : MonoBehaviour
         int rowCount = YAMLLoader.Instance.Grids[gridNb].grid.Length;
         int colCount = YAMLLoader.Instance.Grids[gridNb].grid[0].Length;
         this.gridLayout.constraintCount = colCount;
-        this.gridSquares = new GridSquare[rowCount, colCount];
-
+        this.GridSquares = new GridSquare[rowCount, colCount];
+        this.gridLayout.transform.KillAllChildren();
         for (int r = 0; r < rowCount; r++)
         {
             for (int c = 0; c < colCount; c++)
             {
                 if (YAMLLoader.Instance.Grids[gridNb].grid[r][c] == '#')
                 {
-                    Archipelamots.DefCell defcell = YAMLLoader.Instance.Grids[gridNb].defCells.First(x => x.coords.c == c && x.coords.r == r);
+                    YAML.DefCell defcell = YAMLLoader.Instance.Grids[gridNb].defCells.First(x => x.coords.c == c && x.coords.r == r);
                     if (defcell == null)
                         throw new System.Exception($"Could not find def cell at r:{r}, c:{c}");
 
                     if (defcell.definitions.Length == 1)
                     {
                         DefinitionGridSquareFull gridSquare = Instantiate(this.definitionGridSquareFullPrefab, this.gridLayout.transform);
-                        gridSquare.Initialize(r, c, defcell.definitions[0]);
-                        this.gridSquares[r, c] = gridSquare;
+                        gridSquare.Initialize(this, r, c, defcell.definitions[0]);
+                        this.GridSquares[r, c] = gridSquare;
                     }
                     else
                     {
                         DefinitionGridSquareShared gridSquare = Instantiate(this.definitionGridSquareSharedPrefab, this.gridLayout.transform);
-                        gridSquare.Initialize(r, c, defcell.definitions[0], defcell.definitions[1]);
-                        this.gridSquares[r, c] = gridSquare;
+                        gridSquare.Initialize(this, r, c, defcell.definitions[0], defcell.definitions[1]);
+                        this.GridSquares[r, c] = gridSquare;
                     }
                 }
                 else
                 {
                     LetterGridSquare gridSquare = Instantiate(this.letterGridSquarePrefab, this.gridLayout.transform);
-                    gridSquare.Initialize(r, c);
-                    this.gridSquares[r, c] = gridSquare;
+                    gridSquare.Initialize(this, r, c);
+                    this.GridSquares[r, c] = gridSquare;
                 }
             }
         }
+
+        SavingUtility.LoadGridData(this);
     }
     
     public void SwitchDirection()
@@ -155,7 +156,7 @@ public class CrosswordGrid : MonoBehaviour
     public void Select(DefinitionSubSquare subSquare)
     {
         this.CurrentDirection = subSquare.Direction;
-        this.SelectLetter(this.gridSquares[subSquare.StartingR, subSquare.StartingC] as LetterGridSquare, subSquare.Direction);
+        this.SelectLetter(this.GridSquares[subSquare.StartingR, subSquare.StartingC] as LetterGridSquare, subSquare.Direction);
     }
 
     private void SelectNextLetter()
@@ -184,13 +185,13 @@ public class CrosswordGrid : MonoBehaviour
         else
             r += direction;
 
-        while (c >= 0 && c < this.gridSquares.GetLength(0) && r >= 0 && r < this.gridSquares.GetLength(1))
+        while (c >= 0 && c < this.GridSquares.GetLength(0) && r >= 0 && r < this.GridSquares.GetLength(1))
         {
-            if (this.gridSquares[r, c] is LetterGridSquare)
+            if (this.GridSquares[r, c] is LetterGridSquare)
             {
-                if (!(this.gridSquares[r, c] as LetterGridSquare).LockedIn)
+                if (!(this.GridSquares[r, c] as LetterGridSquare).LockedIn)
                 {
-                    this.SelectLetter((this.gridSquares[r, c] as LetterGridSquare), this.CurrentDirection);
+                    this.SelectLetter((this.GridSquares[r, c] as LetterGridSquare), this.CurrentDirection);
                     return;
                 }
             }
@@ -237,7 +238,7 @@ public class CrosswordGrid : MonoBehaviour
     private void DeselectAll()
     {
         this.CurrentlySelected = null;
-        foreach (GridSquare square in this.gridSquares)
+        foreach (GridSquare square in this.GridSquares)
         {
             square.Deselect();
         }
@@ -268,9 +269,9 @@ public class CrosswordGrid : MonoBehaviour
         int c = gridSquare.C;
         while (c >= 0 && r >= 0)
         {
-            if (this.gridSquares[r, c] is LetterGridSquare)
+            if (this.GridSquares[r, c] is LetterGridSquare)
             {
-                lastValidLetter = this.gridSquares[r, c] as LetterGridSquare;
+                lastValidLetter = this.GridSquares[r, c] as LetterGridSquare;
             }
             else
             {
@@ -291,14 +292,14 @@ public class CrosswordGrid : MonoBehaviour
     {
         int r = startR;
         int c = startC;
-        int length = direction == Direction.Horizontal ? this.gridSquares.GetLength(0) : this.gridSquares.GetLength(1);
+        int length = direction == Direction.Horizontal ? this.GridSquares.GetLength(0) : this.GridSquares.GetLength(1);
         ref int coord = ref direction == Direction.Horizontal ? ref c : ref r;
         for (; coord < length; coord++)
         {
-            if (this.gridSquares[r, c] is LetterGridSquare)
+            if (this.GridSquares[r, c] is LetterGridSquare)
             {
                 // If the function returns true, we continue; if false, we stop
-                if (!function.Invoke(this.gridSquares[r, c] as LetterGridSquare))
+                if (!function.Invoke(this.GridSquares[r, c] as LetterGridSquare))
                 {
                     return;
                 }

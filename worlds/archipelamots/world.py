@@ -9,14 +9,6 @@ import Utils
 from . import items, locations, regions, rules, web_world
 from . import options as archipelamots_options  # rename due to a name conflict with World.options
 
-def parse_grids(grid_data) -> Any:
-    parsed_data = Utils.parse_yaml(grid_data.value)
-    print(grid_data.value)
-    print("--------------")
-    print(parsed_data)
-    wait = input("Press Enter to continue.")
-    return parsed_data
-
 # The world class is the heart and soul of an apworld implementation.
 # It holds all the data and functions required to build the world and submit it to the multiworld generator.
 # You could have all your world code in just this one class, but for readability and better structure,
@@ -51,15 +43,10 @@ class ArchipelamotsWorld(World):
     origin_region_name = "Menu"
 
     def generate_early(self):
-        print("Generating Early")
-        print(self.options.nb_of_checks_per_grid)
-        print(self.options.as_dict())
-        print("--------------")
-        print(self.options.grid_data.value)
         parsed_data = Utils.parse_yaml(self.options.grid_data.value)
-        print("--------------")
-        print(parsed_data)
-        input("Press Enter to continue.")
+        self.grids_data = parsed_data
+
+    grids_data = []
 
     # Our world class must have certain functions ("steps") that get called during generation.
     # The main ones are: create_regions, set_rules, create_items.

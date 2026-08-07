@@ -15,13 +15,13 @@ public class DefinitionSubSquare : MonoBehaviour, IPointerClickHandler
     public int StartingC { get; private set; }
     public Direction Direction { get; private set; }
 
-    public void Initialize(DefinitionGridSquare parentSquare, Archipelamots.DefCellInfo defCellInfo)
+    public void Initialize(DefinitionGridSquare parentSquare, YAML.DefCellInfo defCellInfo)
     {
-        Archipelamots.Definition definition = YAMLLoader.Instance.Grids[CrosswordGrid.Instance.GridNb].GetDefinition(defCellInfo.word, out int index);
         this.ParentSquare = parentSquare;
-        this.text.text = definition.revealed ? definition.definition : $"DEFINITION N°{index}";
+        YAML.Definition definition = YAMLLoader.Instance.Grids[this.ParentSquare.Grid.GridNb].GetDefinition(defCellInfo.word, out int index);
+        this.text.text = definition.revealed ? $"N°{index + 1} : {definition.definition}" : $"DEFINITION N°{index + 1}";
         this.notRevealedBackground.SetActive(!definition.revealed);
-        this.arrow.sprite = CrosswordGrid.Instance.arrowSprites.Find(x => x.character == defCellInfo.arrow).sprite;
+        this.arrow.sprite = this.ParentSquare.Grid.arrowSprites.Find(x => x.character == defCellInfo.arrow).sprite;
 
         switch (defCellInfo.arrow)
         {
@@ -47,7 +47,7 @@ public class DefinitionSubSquare : MonoBehaviour, IPointerClickHandler
                 break;
         }
 
-        this.arrow.transform.SetParent(CrosswordGrid.Instance.transform, true);
+        this.arrow.transform.SetParent(this.ParentSquare.Grid.transform, true);
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -58,7 +58,7 @@ public class DefinitionSubSquare : MonoBehaviour, IPointerClickHandler
 
     public void OnClick()
     {
-        CrosswordGrid.Instance.LastClicked = this.ParentSquare;
-        CrosswordGrid.Instance.Select(this);
+        this.ParentSquare.Grid.LastClicked = this.ParentSquare;
+        this.ParentSquare.Grid.Select(this);
     }
 }

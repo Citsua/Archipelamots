@@ -8,8 +8,8 @@ public class YAMLLoader : MonoBehaviour
 {
     public static YAMLLoader Instance { get; private set; }
 
-    public ArchipelagoYAML YAML {  get; private set; }
-    public Archipelamots.Grid[] Grids { get; private set; }
+    public YAML.ArchipelagoYAML YAML {  get; private set; }
+    public YAML.Grid[] Grids { get; private set; }
 
     // Necessary for static variables to work correctly when domain reload is disabled
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -53,8 +53,10 @@ public class YAMLLoader : MonoBehaviour
         IDeserializer deserializer = new DeserializerBuilder().Build();
         using (StreamReader streamReader = File.OpenText(paths[0]))
         {
-            this.YAML = deserializer.Deserialize<ArchipelagoYAML>(streamReader);
-            this.Grids = this.YAML.Archipelamots.grids;
+            this.YAML = deserializer.Deserialize<YAML.ArchipelagoYAML>(streamReader);
+            string obj = $"grid_data:\n{this.YAML.Archipelamots.grid_data}";
+            YAML.ArchipelagoGridDataYAML gridData = deserializer.Deserialize<YAML.ArchipelagoGridDataYAML>(obj);
+            this.Grids = gridData.grid_data;
             CrosswordGrid.Instance.Initialize(0);
         }
     }
