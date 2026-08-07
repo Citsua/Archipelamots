@@ -137,11 +137,6 @@ public static class SavingUtility
 
     public static void LoadGridData(CrosswordGrid grid)
     {
-        if (CurrentSaveData == null)
-        {
-            LoadSaveData();
-        }
-
         if (CurrentSaveData.gridsData == null)
             return;
 
@@ -166,5 +161,39 @@ public static class SavingUtility
                 }
             }
         }
+    }
+
+    public static int GetNumberOfLetterReveals()
+    {
+        return CurrentSaveData.letterReveals;
+    }
+
+    public static int GetNumberOfWordChecks()
+    {
+        return CurrentSaveData.wordChecks;
+    }
+
+    public static void IncreaseNumberOfLetterReveals()
+    {
+        CurrentSaveData.letterReveals++;
+        OverwriteSaveData();
+    }
+
+    public static void IncreaseNumberOfWordChecks()
+    {
+        CurrentSaveData.wordChecks++;
+        OverwriteSaveData();
+    }
+
+    public static void DecreaseNumberOfLetterReveals()
+    {
+        CurrentSaveData.letterReveals--;
+        OverwriteSaveData();
+    }
+
+    public static void DecreaseNumberOfWordChecks()
+    {
+        CurrentSaveData.wordChecks--;
+        OverwriteSaveData();
     }
 }

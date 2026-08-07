@@ -25,12 +25,7 @@ public class YAMLLoader : MonoBehaviour
         Instance = this;
     }
 
-    private void Start()
-    {
-        this.ShowDialog();
-    }
-
-    private void ShowDialog()
+    public void ShowDialog()
     {
         try
         {
@@ -57,7 +52,8 @@ public class YAMLLoader : MonoBehaviour
             string obj = $"grid_data:\n{this.YAML.Archipelamots.grid_data}";
             YAML.ArchipelagoGridDataYAML gridData = deserializer.Deserialize<YAML.ArchipelagoGridDataYAML>(obj);
             this.Grids = gridData.grid_data;
-            CrosswordGrid.Instance.Initialize(0);
+            SavingUtility.LoadSaveData();
+            CrosswordGrid.Current.Initialize(0);
         }
     }
 

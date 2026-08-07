@@ -3,6 +3,7 @@ using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Helpers;
 using Archipelago.MultiClient.Net.Models;
 using System;
+using System.Linq;
 using UnityEngine;
 
 public class ServerConnector : MonoBehaviour
@@ -37,19 +38,42 @@ public class ServerConnector : MonoBehaviour
         if (this.session != null)
         {
             this.session.Items.ItemReceived += this.OnItemReceived;
+            YAMLLoader.Instance.ShowDialog();
         }
     }
 
     private void OnItemReceived(ReceivedItemsHelper helper)
     {
         ItemInfo info = helper.DequeueItem();
-        Debug.Log("received item " + info.ItemName);
+        Debug.Log("Received item " + info.ItemName);
+        if (info.Flags.HasFlag(ItemFlags.Advancement))
+        {
+            CrosswordGrid.Current.Reinitialize();
+        }
+        else
+        {
+            if (info.ItemName == "Word Check")
+            {
+                SavingUtility.IncreaseNumberOfWordChecks();
+            }
+            else if (info.ItemName == "Letter Reveal")
+            {
+                SavingUtility.IncreaseNumberOfLetterReveals();
+            }
+        }
+
+        UI.Instance.UpdatePowerUI();
     }
 
-    public void SendLocationCheck(int location)
+    public void SendLocationCheck(string name)
     {
-        Debug.Log("completed check " + this.session.Locations.GetLocationNameFromId(location));
-        this.session.Locations.CompleteLocationChecks(location);
+        Debug.Log($"completed check {name} (id {this.session.Locations.GetLocationIdFromName("Archipelamots", name)})");
+        this.session.Locations.CompleteLocationChecks(this.session.Locations.GetLocationIdFromName("Archipelamots", name));
+    }
+
+    public bool HasItem(string name)
+    {
+        return this.session.Items.AllItemsReceived.ToList().Exists(x => x.ItemName == name);
     }
 
     private static ArchipelagoSession Connect(string server, int port, string user, string password)

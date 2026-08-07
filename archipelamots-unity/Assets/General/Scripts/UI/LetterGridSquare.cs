@@ -10,6 +10,7 @@ public class LetterGridSquare : GridSquare, IPointerClickHandler
     [SerializeField] private GameObject lockedIn;
 
     public bool LockedIn { get; private set; } = false;
+    public char Character { get; private set; }
 
     public override void Initialize(CrosswordGrid grid, int r, int c)
     {
@@ -17,6 +18,7 @@ public class LetterGridSquare : GridSquare, IPointerClickHandler
         this.text.text = string.Empty;
         this.mainSelected.SetActive(false);
         this.secondarySelected.SetActive(false);
+        this.lockedIn.SetActive(false);
     }
 
     public void OnClick()
@@ -40,10 +42,13 @@ public class LetterGridSquare : GridSquare, IPointerClickHandler
         if (this.LockedIn)
             return;
 
+        this.Character = letter;
         this.text.text = letter.ToString();
 
         if (save)
-            SavingUtility.SaveGridCharacter(this, letter);
+            SavingUtility.SaveGridCharacter(this, this.Character);
+
+        UI.Instance.UpdatePowerUI();
     }
 
     public void Erase(bool save = true)
@@ -51,19 +56,31 @@ public class LetterGridSquare : GridSquare, IPointerClickHandler
         if (this.LockedIn)
             return;
 
+        this.Character = '\0';
         this.text.text = string.Empty;
 
         if (save)
-            SavingUtility.SaveGridCharacter(this, '\0');
+            SavingUtility.SaveGridCharacter(this, this.Character);
+
+        UI.Instance.UpdatePowerUI();
     }
 
     public void LockIn(bool save = true)
     {
+        if (this.LockedIn)
+            return;
+
+        this.Set(YAMLLoader.Instance.Grids[this.Grid.GridNb].grid[this.R][this.C], false);
+
         this.LockedIn = true;
         this.lockedIn.SetActive(true);
 
         if (save)
             SavingUtility.SaveGridCharacter(this, this.text.text[0]);
+
+        this.Grid.CheckJustFinishedWord(this);
+        this.Grid.CheckGridFinished();
+        UI.Instance.UpdatePowerUI();
     }
 
     public void MainSelect()

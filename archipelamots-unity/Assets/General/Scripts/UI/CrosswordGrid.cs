@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -20,7 +21,7 @@ public struct ArrowSprite
 
 public class CrosswordGrid : MonoBehaviour
 {
-    public static CrosswordGrid Instance { get; private set; }
+    public static CrosswordGrid Current { get; private set; }
 
     [SerializeField] private GridLayoutGroup gridLayout;
     [SerializeField] private LetterGridSquare letterGridSquarePrefab;
@@ -40,18 +41,14 @@ public class CrosswordGrid : MonoBehaviour
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     static private void Init()
     {
-        Instance = null;
-
-        // This is necessary only in the GameManager for Input to work correctly when domain reload is disabled
-        // For some reason, without this line, no input is detected at all
-        InputSystem.actions.Enable();
+        Current = null;
     }
 
     private void Awake()
     {
-        if (Instance != null)
+        if (Current != null)
             throw new System.Exception($"{this.GetType()} Singleton already exists in the scene");
-        Instance = this;
+        Current = this;
     }
 
     private void Update()
@@ -93,8 +90,8 @@ public class CrosswordGrid : MonoBehaviour
         int rowCount = YAMLLoader.Instance.Grids[gridNb].grid.Length;
         int colCount = YAMLLoader.Instance.Grids[gridNb].grid[0].Length;
         this.gridLayout.constraintCount = colCount;
-        this.GridSquares = new GridSquare[rowCount, colCount];
         this.gridLayout.transform.KillAllChildren();
+        this.GridSquares = new GridSquare[rowCount, colCount];
         for (int r = 0; r < rowCount; r++)
         {
             for (int c = 0; c < colCount; c++)
@@ -128,8 +125,16 @@ public class CrosswordGrid : MonoBehaviour
         }
 
         SavingUtility.LoadGridData(this);
+        UI.Instance.UpdatePowerUI();
     }
-    
+
+    public void Reinitialize()
+    {
+        Debug.Log("reinitialize");
+        this.Initialize(this.GridNb);
+        this.Select(this.CurrentlySelected);
+    }
+
     public void SwitchDirection()
     {
         if (this.CurrentDirection == Direction.Horizontal)
@@ -224,6 +229,7 @@ public class CrosswordGrid : MonoBehaviour
             }
             return true;
         });
+        UI.Instance.UpdatePowerUI();
     }
 
     private void SelectWord(int startR, int startC, Direction direction)
@@ -233,6 +239,7 @@ public class CrosswordGrid : MonoBehaviour
             square.SecondarySelect();
             return true;
         });
+        UI.Instance.UpdatePowerUI();
     }
 
     private void DeselectAll()
@@ -242,11 +249,149 @@ public class CrosswordGrid : MonoBehaviour
         {
             square.Deselect();
         }
+        UI.Instance.UpdatePowerUI();
+    }
+
+    public bool CheckSelectedWordLockedIn(out string word)
+    {
+        word = string.Empty;
+        if (this.CurrentlySelected == null)
+            return false;
+
+        return this.CheckWordLockedIn(this.CurrentlySelected, this.CurrentDirection, out word);
+    }
+
+    public bool CheckWordLockedIn(LetterGridSquare letterInWord, Direction direction, out string word)
+    {
+        string fullWord = string.Empty;
+        bool allCorrect = true;
+        LetterGridSquare firstLetter = this.FindFirstLetterOfWord(letterInWord, direction);
+        this.IterateLetters(firstLetter.R, firstLetter.C, direction, (LetterGridSquare square) =>
+        {
+            if (!square.LockedIn)
+            {
+                allCorrect = false;
+                return false;
+            }
+
+            fullWord += square.Character;
+            return true;
+        });
+
+        word = fullWord;
+        if (allCorrect)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public bool CheckSelectedWordFull()
+    {
+        if (this.CurrentlySelected == null)
+            return false;
+
+        bool allCorrect = true;
+        LetterGridSquare firstLetter = this.FindFirstLetterOfWord(this.CurrentlySelected, this.CurrentDirection);
+        this.IterateLetters(firstLetter.R, firstLetter.C, this.CurrentDirection, (LetterGridSquare square) =>
+        {
+            if (square.Character == '\0')
+            {
+                allCorrect = false;
+                return false;
+            }
+
+            return true;
+        });
+
+        return allCorrect;
+    }
+
+    public bool CheckSelectedWordCorrect()
+    {
+        if (this.CurrentlySelected == null)
+            return false;
+
+        bool allCorrect = true;
+        LetterGridSquare firstLetter = this.FindFirstLetterOfWord(this.CurrentlySelected, this.CurrentDirection);
+        this.IterateLetters(firstLetter.R, firstLetter.C, this.CurrentDirection, (LetterGridSquare square) =>
+        {
+            if (square.Character != YAMLLoader.Instance.Grids[this.GridNb].grid[square.R][square.C])
+            {
+                allCorrect = false;
+                return false;
+            }
+
+            return true;
+        });
+
+        return allCorrect;
+    }
+
+    public void LockInSelectedWord()
+    {
+        if (this.CurrentlySelected == null)
+            return;
+
+        LetterGridSquare firstLetter = this.FindFirstLetterOfWord(this.CurrentlySelected, this.CurrentDirection);
+        this.IterateLetters(firstLetter.R, firstLetter.C, this.CurrentDirection, (LetterGridSquare square) =>
+        {
+            square.LockIn();
+            return true;
+        });
+    }
+
+    public void CheckJustFinishedWord(LetterGridSquare justLockedIn)
+    {
+        foreach (Direction direction in Utility.GetValues<Direction>())
+        {
+            if (this.IsValidDirection(justLockedIn, direction))
+            {
+                if (this.CheckWordLockedIn(justLockedIn, direction, out string word))
+                {
+                    YAMLLoader.Instance.Grids[this.GridNb].GetDefinition(word, out int index);
+                    ServerConnector.Instance.SendLocationCheck($"Complete Word n°{index + 1} in Grid n°{this.GridNb + 1}");
+                }
+            }
+        }
     }
 
     public void CheckGridFinished()
     {
-        // TODO
+        bool allCorrect = true;
+        foreach (GridSquare square in this.GridSquares)
+        {
+            LetterGridSquare letterSquare = square as LetterGridSquare;
+            if (letterSquare != null)
+            {
+                if (letterSquare.Character != YAMLLoader.Instance.Grids[this.GridNb].grid[letterSquare.R][letterSquare.C])
+                {
+                    allCorrect = false;
+                    break;
+                }
+            }
+        }
+
+        // TODO particles and shit
+        if (allCorrect)
+        {
+            foreach (GridSquare gridSquare in this.GridSquares)
+            {
+                LetterGridSquare letterSquare = gridSquare as LetterGridSquare;
+                if (letterSquare != null)
+                {
+                    letterSquare.LockIn();
+                }
+            }
+
+            for (int i = 0; i < YAMLLoader.Instance.YAML.Archipelamots.nb_of_checks_per_grid; i++)
+            {
+                ServerConnector.Instance.SendLocationCheck($"Complete Grid n°{this.GridNb + 1} ({i + 1})");
+            }
+        }
     }
 
     private bool IsValidDirection(LetterGridSquare square, Direction direction)

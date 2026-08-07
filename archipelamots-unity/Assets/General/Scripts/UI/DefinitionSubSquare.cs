@@ -19,8 +19,9 @@ public class DefinitionSubSquare : MonoBehaviour, IPointerClickHandler
     {
         this.ParentSquare = parentSquare;
         YAML.Definition definition = YAMLLoader.Instance.Grids[this.ParentSquare.Grid.GridNb].GetDefinition(defCellInfo.word, out int index);
-        this.text.text = definition.revealed ? $"N°{index + 1} : {definition.definition}" : $"DEFINITION N°{index + 1}";
-        this.notRevealedBackground.SetActive(!definition.revealed);
+        bool revealed = definition.revealed || ServerConnector.Instance.HasItem($"Definition n°{index + 1} from Grid n°{this.ParentSquare.Grid.GridNb + 1}");
+        this.text.text = revealed ? $"N°{index + 1} : {definition.definition}" : $"DEFINITION N°{index + 1}";
+        this.notRevealedBackground.SetActive(!revealed);
         this.arrow.sprite = this.ParentSquare.Grid.arrowSprites.Find(x => x.character == defCellInfo.arrow).sprite;
 
         switch (defCellInfo.arrow)

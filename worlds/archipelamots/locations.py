@@ -21,7 +21,7 @@ def generate_locations() -> dict[str, int]:
             dictionary[f"Complete Grid n°{str(x + 1)} ({str(y + 1)})"] = id
             id += 1
         for y in range(50):
-            dictionary[f"Complete Word n°{str(y + 1)} in Grid n°{str(x + 1)} ({str(y + 1)})"] = id
+            dictionary[f"Complete Word n°{str(y + 1)} in Grid n°{str(x + 1)}"] = id
             id += 1
     return dictionary
 
@@ -53,7 +53,7 @@ def create_regular_locations(world: ArchipelamotsWorld) -> None:
         for y in range(world.options.nb_of_checks_per_grid):
             region.add_locations(get_location_names_with_ids([f"Complete Grid n°{str(x + 1)} ({str(y + 1)})"]), ArchipelamotsLocation)
         for y in range(len(world.grids_data[x]["slots"])):
-            region.add_locations(get_location_names_with_ids([f"Complete Word n°{str(y + 1)} in Grid n°{str(x + 1)} ({str(y + 1)})"]), ArchipelamotsLocation)
+            region.add_locations(get_location_names_with_ids([f"Complete Word n°{str(y + 1)} in Grid n°{str(x + 1)}"]), ArchipelamotsLocation)
 
 
 def create_events(world: ArchipelamotsWorld) -> None:
