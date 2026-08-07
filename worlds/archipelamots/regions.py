@@ -4,6 +4,8 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import Entrance, Region
 
+import os
+
 if TYPE_CHECKING:
     from .world import ArchipelamotsWorld
 
@@ -39,4 +41,4 @@ def connect_regions(world: ArchipelamotsWorld) -> None:
     
     for x in range(world.options.total_nb_of_grids):
         region = world.get_region("Grid n°" + str(x + 1))
-        menu.connect(region, "Menu to Grid n°" + str(x + 1), lambda state: state.has("Grid n°" + str(x + 1) + " Unlocked", world.player))
+        menu.connect(region, "Menu to Grid n°" + str(x + 1), lambda state: state.has("Grid n°" + str(x + 1), world.player))

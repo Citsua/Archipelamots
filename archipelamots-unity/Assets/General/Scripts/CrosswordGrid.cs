@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
 
 public enum Direction
@@ -59,7 +60,20 @@ public class CrosswordGrid : MonoBehaviour
         if (this.CurrentlySelected == null)
             return;
 
-        if (Input.anyKeyDown)
+        if (Input.GetKeyDown(KeyCode.Backspace))
+        {
+            this.CurrentlySelected.Erase();
+            this.SelectPreviousLetter();
+        }
+        else if (Input.GetKeyDown(KeyCode.Delete))
+        {
+            this.CurrentlySelected.Erase();
+        }
+        else if (Input.GetKeyDown(KeyCode.Space))
+        {
+            this.SelectNextLetter();
+        }
+        else if (Input.anyKeyDown)
         {
             if (Input.inputString.Length == 1)
             {
@@ -68,6 +82,7 @@ public class CrosswordGrid : MonoBehaviour
                 {
                     this.CurrentlySelected.Set(char.ToUpper(character));
                     this.SelectNextLetter();
+                    this.CheckGridFinished();
                 }
             }
         }
@@ -145,6 +160,17 @@ public class CrosswordGrid : MonoBehaviour
 
     private void SelectNextLetter()
     {
+        this.SelectAdjacentLetter(1);
+    }
+
+
+    private void SelectPreviousLetter()
+    {
+        this.SelectAdjacentLetter(-1);
+    }
+
+    private void SelectAdjacentLetter(int direction)
+    {
         if (this.CurrentlySelected == null)
             throw new System.Exception("Cannot select next letter, there is none selected at the moment");
 
@@ -154,11 +180,11 @@ public class CrosswordGrid : MonoBehaviour
         int c = this.CurrentlySelected.C;
 
         if (this.CurrentDirection == Direction.Horizontal)
-            c++;
+            c += direction;
         else
-            r++;
+            r += direction;
 
-        while (c < this.gridSquares.GetLength(0) && r < this.gridSquares.GetLength(1))
+        while (c >= 0 && c < this.gridSquares.GetLength(0) && r >= 0 && r < this.gridSquares.GetLength(1))
         {
             if (this.gridSquares[r, c] is LetterGridSquare)
             {
@@ -174,9 +200,9 @@ public class CrosswordGrid : MonoBehaviour
             }
 
             if (this.CurrentDirection == Direction.Horizontal)
-                c++;
+                c += direction;
             else
-                r++;
+                r += direction;
         }
     }
 
@@ -215,6 +241,11 @@ public class CrosswordGrid : MonoBehaviour
         {
             square.Deselect();
         }
+    }
+
+    public void CheckGridFinished()
+    {
+        // TODO
     }
 
     private bool IsValidDirection(LetterGridSquare square, Direction direction)

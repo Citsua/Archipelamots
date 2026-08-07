@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from BaseClasses import Item, ItemClassification
+from .options import TotalNbOfGrids
 
 if TYPE_CHECKING:
     from .world import ArchipelamotsWorld
@@ -10,27 +11,24 @@ if TYPE_CHECKING:
 # Every item must have a unique integer ID associated with it.
 # We will have a lookup from item name to ID here that, in world.py, we will import and bind to the world class.
 # Even if an item doesn't exist on specific options, it must be present in this lookup.
-ITEM_NAME_TO_ID = {
-    "Grid n°1 Unlocked": 1,
-    "Grid n°2 Unlocked": 2,
-    "Grid n°3 Unlocked": 3,
-    "Grid n°4 Unlocked": 4,
-    "Grid n°5 Unlocked": 5,
-    "Grid n°6 Unlocked": 6,
-    "Letter Cheat": 101,
-}
+def generate_items() -> dict[str, int]:
+    dict = {}
+    id = 1
+    for x in range(TotalNbOfGrids.range_end):
+        dict[f"Grid n°{str(x + 1)}"] = id
+        id += 1
+        for y in range(50):
+            dict[f"Definition n°{str(y + 1)} from Grid n°{str(x + 1)}"] = id
+            id += 1
+    dict["Letter Reveal"] = 10001
+    dict["Word Check"] = 10002
+    return dict
 
-# Items should have a defined default classification.
-# In our case, we will make a dictionary from item name to classification.
-DEFAULT_ITEM_CLASSIFICATIONS = {
-    "Grid n°1 Unlocked": ItemClassification.progression,
-    "Grid n°2 Unlocked": ItemClassification.progression,
-    "Grid n°3 Unlocked": ItemClassification.progression,
-    "Grid n°4 Unlocked": ItemClassification.progression,
-    "Grid n°5 Unlocked": ItemClassification.progression,
-    "Grid n°6 Unlocked": ItemClassification.progression,
-    "Letter Cheat": ItemClassification.useful,
-}
+ITEM_NAME_TO_ID = generate_items()
+
+FILLER_ITEMS = [
+    "Letter Reveal", "Word Check"
+]
 
 
 # Each Item instance must correctly report the "game" it belongs to.
@@ -43,11 +41,16 @@ class ArchipelamotsItem(Item):
 # To do this, it must define a function called world.get_filler_item_name(), which we will define in world.py later.
 # For now, let's make a function that returns the name of a random filler item here in items.py.
 def get_random_filler_item_name(world: ArchipelamotsWorld) -> str:
-    return "Letter Cheat"
+    if world.random.randint(0, 99) < 25:
+        return "Word Check"
+    return "Letter Reveal"
 
 
 def create_item_with_correct_classification(world: ArchipelamotsWorld, name: str) -> ArchipelamotsItem:
-    classification = DEFAULT_ITEM_CLASSIFICATIONS[name]
+    if name in FILLER_ITEMS:
+        classification = ItemClassification.filler
+    else:
+        classification = ItemClassification.progression
     return ArchipelamotsItem(name, classification, ITEM_NAME_TO_ID[name], world.player)
 
 
@@ -65,7 +68,7 @@ def create_all_items(world: ArchipelamotsWorld) -> None:
     itempool: list[Item] = []
     
     for x in range(world.options.total_nb_of_grids):
-        item = world.create_item("Grid n°" + str(x + 1) + " Unlocked")
+        item = world.create_item(f"Grid n°{str(x + 1)}")
         itempool.append(item)
 
     # Archipelago requires that each world submits as many locations as it submits items.
@@ -131,5 +134,5 @@ def create_all_items(world: ArchipelamotsWorld) -> None:
     # Players can add precollected items themselves via the generic "start_inventory" option.
     # If you want to add your own precollected items, you can do so via world.push_precollected().
     for x in range(world.options.nb_of_starting_grids):
-        item = world.create_item("Grid n°" + str(x + 1) + " Unlocked")
+        item = world.create_item(f"Grid n°{str(x + 1)}")
         world.push_precollected(item)
