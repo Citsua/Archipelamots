@@ -1,10 +1,11 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class RandomBackground : MonoBehaviour
 {
-    [SerializeField] private Texture2D[] possibleBackgrounds;
+    [SerializeField] private Material[] possibleBackgrounds;
 
     private Image image;
     private Image Image
@@ -25,9 +26,17 @@ public class RandomBackground : MonoBehaviour
         this.Randomize();
     }
 
+    private void Update()
+    {
+        if (Mouse.current.middleButton.wasPressedThisFrame)
+        {
+            this.Randomize();
+        }
+    }
+
     [Button]
     private void Randomize()
     {
-        this.Image.material.SetTexture("_Texture", this.possibleBackgrounds[Random.Range(0, this.possibleBackgrounds.Length)]);
+        this.Image.material = this.possibleBackgrounds[Random.Range(0, this.possibleBackgrounds.Length)];
     }
 }

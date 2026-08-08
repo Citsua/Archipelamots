@@ -2158,7 +2158,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
-  m_Material: {fileID: 2100000, guid: 58078010406a902429559212918bbb37, type: 2}
+  m_Material: {fileID: 2100000, guid: c66385e2b3c58aa4fbcb589a175b3f4c, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -2197,10 +2197,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RandomBackground
   possibleBackgrounds:
-  - {fileID: 2800000, guid: bbf46325144019048b3c390b75cb2d05, type: 3}
-  - {fileID: 2800000, guid: a83629b0621af9c4bb4997ea2b02f2ee, type: 3}
-  - {fileID: 2800000, guid: d4f40d6d7ed2c6e4abcf5522eaad7a62, type: 3}
-  - {fileID: 2800000, guid: 4d7fb4c5709e4dd43811eedb2119eddc, type: 3}
+  - {fileID: 2100000, guid: 58078010406a902429559212918bbb37, type: 2}
+  - {fileID: 2100000, guid: 9deeeb63431bc1141a750abbdd6fb82a, type: 2}
+  - {fileID: 2100000, guid: f5e85d85cf8cd9248b9eb052a35fef37, type: 2}
+  - {fileID: 2100000, guid: 76515307606f42544b69fe61cce54877, type: 2}
+  - {fileID: 2100000, guid: 0c4a30ca52df94e4ea8e06a06f9debcd, type: 2}
+  - {fileID: 2100000, guid: cb70080eff326a740add59990bcf18dd, type: 2}
+  - {fileID: 2100000, guid: bd80a5b5ad0bf4a4daa65b8db5719114, type: 2}
+  - {fileID: 2100000, guid: c66385e2b3c58aa4fbcb589a175b3f4c, type: 2}
+  - {fileID: 2100000, guid: c131e9cb6670da94e88a0c42f1726f37, type: 2}
+  - {fileID: 2100000, guid: c5d4e5e4fb7a2af488b8218c7afdad3d, type: 2}
+  - {fileID: 2100000, guid: 62b68c163e04d844da98a0761fe9553a, type: 2}
 --- !u!1001 &783245530
 PrefabInstance:
   m_ObjectHideFlags: 0

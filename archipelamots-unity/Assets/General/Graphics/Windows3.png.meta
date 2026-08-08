@@ -1,10 +1,11 @@
 fileFormatVersion: 2
-guid: bbf46325144019048b3c390b75cb2d05
+guid: 7b25fc31c68529343b810b46b347311f
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6146795774391780013
-    second: Beach_0
+      213: -9096004545180078649
+    second: Wallpaper Alchemy - Windows 11 Abstract Waves Wallpaper - 4K Ultra HD
+      Orange Pink Gradient Desktop Background_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +101,14 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Beach_0
+      name: Wallpaper Alchemy - Windows 11 Abstract Waves Wallpaper - 4K Ultra HD
+        Orange Pink Gradient Desktop Background_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 3278
-        height: 1960
+        width: 3840
+        height: 2400
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +117,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 35d71807fc132baa0800000000000000
-      internalID: -6146795774391780013
+      spriteID: 7cde3311f0084c180800000000000000
+      internalID: -9096004545180078649
       vertices: []
       indices: 
       edges: []
@@ -125,7 +127,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +137,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Beach_0: -6146795774391780013
+      Wallpaper Alchemy - Windows 11 Abstract Waves Wallpaper - 4K Ultra HD Orange Pink Gradient Desktop Background_0: -9096004545180078649
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

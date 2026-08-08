@@ -1,10 +1,11 @@
 fileFormatVersion: 2
-guid: bbf46325144019048b3c390b75cb2d05
+guid: aa71ea822894e084781a7f8aae5fd062
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6146795774391780013
-    second: Beach_0
+      213: 7678671942260410016
+    second: Wallpaper Alchemy - 4K High Resolution Dark Geometric Shards Wallpaper
+      for Windows 11_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +101,14 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Beach_0
+      name: Wallpaper Alchemy - 4K High Resolution Dark Geometric Shards Wallpaper
+        for Windows 11_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 3278
-        height: 1960
+        width: 3840
+        height: 2160
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +117,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 35d71807fc132baa0800000000000000
-      internalID: -6146795774391780013
+      spriteID: 0a6c039b27f109a60800000000000000
+      internalID: 7678671942260410016
       vertices: []
       indices: 
       edges: []
@@ -125,7 +127,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +137,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Beach_0: -6146795774391780013
+      Wallpaper Alchemy - 4K High Resolution Dark Geometric Shards Wallpaper for Windows 11_0: 7678671942260410016
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

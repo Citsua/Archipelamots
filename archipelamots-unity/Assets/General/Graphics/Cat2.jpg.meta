@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: bbf46325144019048b3c390b75cb2d05
+guid: e7758ae5ed46225458c0c30d4a2480ab
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6146795774391780013
-    second: Beach_0
+      213: 2431843633963688315
+    second: Cat2_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Beach_0
+      name: Cat2_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 3278
-        height: 1960
+        width: 3840
+        height: 2160
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 35d71807fc132baa0800000000000000
-      internalID: -6146795774391780013
+      spriteID: b7163bf86e4afb120800000000000000
+      internalID: 2431843633963688315
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Beach_0: -6146795774391780013
+      Cat2_0: 2431843633963688315
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
