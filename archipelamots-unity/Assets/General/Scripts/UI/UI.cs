@@ -1,6 +1,8 @@
+using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class UI : MonoBehaviour
@@ -13,7 +15,24 @@ public class UI : MonoBehaviour
     [SerializeField] private TMP_Text wordCheckButtonNumber;
     [SerializeField] private Button wordCheckButton;
 
+    [SerializeField] public RectTransform gridScaler;
+    [SerializeField] public RectTransform gridLayout;
+    [SerializeField][MinMaxSlider(0.1f, 10f, true)] private Vector2 gridZoomLimits;
+    [SerializeField] private float zoomSpeed;
+    [SerializeField] private float panSpeed;
+
     public ConnectionUI Connection {  get; private set; }
+    public GridSelectorUI GridSelector { get; private set; }
+
+    public bool Panning
+    {
+        get
+        {
+            return this.holdingLeftClick && this.hasMovedDuringPanning;
+        }
+    }
+    private bool holdingLeftClick;
+    private bool hasMovedDuringPanning;
 
     // Necessary for static variables to work correctly when domain reload is disabled
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -29,15 +48,69 @@ public class UI : MonoBehaviour
         Instance = this;
 
         this.Connection = FindFirstObjectByType<ConnectionUI>(FindObjectsInactive.Include);
+        this.GridSelector = FindFirstObjectByType<GridSelectorUI>(FindObjectsInactive.Include);
     }
 
     private void Start()
     {
         ConfirmationDialog.Initialize();
         InfoDialog.Initialize();
+        this.GridSelector.Hide(true);
         this.letterRevealButton.onClick.AddListener(GameManager.Instance.UseLetterRevealPower);
         this.wordCheckButton.onClick.AddListener(GameManager.Instance.UseWordCheckPower);
         CrosswordGrid.Current.gameObject.SetActive(false);
+    }
+
+    private void Update()
+    {
+        if (!GameManager.Instance.GameStarted)
+            return;
+
+        if (Keyboard.current.tabKey.wasReleasedThisFrame)
+        {
+            this.GridSelector.Toggle();
+        }
+
+        float scrollWheel = Mouse.current.scroll.value.y;
+        if (scrollWheel != 0)
+        {
+            // Ignore scrolling if the player is hovering the grid menu
+            if (!Utility.DetectUIElementUnderMouse().Contains(this.GridSelector.gameObject))
+            {
+                float targetScroll = Mathf.Clamp(this.gridScaler.localScale.x + scrollWheel * this.zoomSpeed * Time.deltaTime, this.gridZoomLimits.x, this.gridZoomLimits.y);
+                this.gridScaler.localScale = Vector3.one * targetScroll;
+            }
+        }
+
+        if (this.holdingLeftClick)
+        {
+            if (Mouse.current.leftButton.wasReleasedThisFrame)
+            {
+                this.holdingLeftClick = false;
+            }
+            else
+            {
+                Vector2 mouseDelta = Mouse.current.delta.value;
+                if (this.hasMovedDuringPanning || mouseDelta.magnitude > 1f)
+                {
+                    this.hasMovedDuringPanning = true;
+                    float xLimit = (Screen.width - this.gridLayout.sizeDelta.x * this.gridZoomLimits.x) / 2f;
+                    float yLimit = (Screen.height - this.gridLayout.sizeDelta.y * this.gridZoomLimits.x) / 2f;
+                    this.gridScaler.transform.localPosition = new Vector3(
+                        Mathf.Clamp(this.gridScaler.transform.localPosition.x + mouseDelta.x * this.panSpeed, -xLimit, xLimit),
+                        Mathf.Clamp(this.gridScaler.transform.localPosition.y + mouseDelta.y * this.panSpeed, -yLimit, yLimit),
+                        0f);
+                }    
+            }
+        }
+        else
+        {
+            if (Mouse.current.leftButton.wasPressedThisFrame)
+            {
+                this.holdingLeftClick = true;
+                this.hasMovedDuringPanning = false;
+            }
+        }
     }
 
     public void UpdatePowerUI()

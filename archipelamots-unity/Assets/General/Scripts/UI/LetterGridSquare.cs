@@ -103,6 +103,9 @@ public class LetterGridSquare : GridSquare, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        if (UI.Instance.Panning)
+            return;
+
         if (eventData.button == PointerEventData.InputButton.Left)
             this.OnClick();
         else if (eventData.button == PointerEventData.InputButton.Right)

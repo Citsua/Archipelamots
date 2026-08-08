@@ -5,6 +5,14 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
+    public bool GameStarted
+    {
+        get
+        {
+            return ServerConnector.Instance.Connected && YAMLLoader.Instance.YAML != null;
+        }
+    }
+
     // Necessary for static variables to work correctly when domain reload is disabled
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     static private void Init()

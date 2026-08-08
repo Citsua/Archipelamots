@@ -59,7 +59,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _ColorMask: 15
-    - _Contrast: 1.21
+    - _Contrast: 3.05
     - _Dot_Randomness: 0
     - _Dot_Rotation: 56.5
     - _Dot_Scale: 42.8
@@ -85,7 +85,7 @@ Material:
     - _StencilOp: 0
     - _StencilReadMask: 255
     - _StencilWriteMask: 255
-    - _Texture_Lighting_Offset: 0.547
+    - _Texture_Lighting_Offset: 1.031
     - _UIMaskSoftnessX: 1
     - _UIMaskSoftnessY: 1
     - _ZWrite: 0

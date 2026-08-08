@@ -7,6 +7,8 @@ public class RandomBackground : MonoBehaviour
 {
     [SerializeField] private Material[] possibleBackgrounds;
 
+    private int currentBackground;
+
     private Image image;
     private Image Image
     {
@@ -23,6 +25,7 @@ public class RandomBackground : MonoBehaviour
 
     private void Start()
     {
+        this.possibleBackgrounds.Shuffle();
         this.Randomize();
     }
 
@@ -30,13 +33,22 @@ public class RandomBackground : MonoBehaviour
     {
         if (Mouse.current.middleButton.wasPressedThisFrame)
         {
-            this.Randomize();
+            this.SwitchToNext();
         }
     }
 
     [Button]
     private void Randomize()
     {
-        this.Image.material = this.possibleBackgrounds[Random.Range(0, this.possibleBackgrounds.Length)];
+        int random = Random.Range(0, this.possibleBackgrounds.Length);
+        this.currentBackground = random;
+        this.Image.material = this.possibleBackgrounds[random];
+    }
+
+    [Button]
+    private void SwitchToNext()
+    {
+        this.currentBackground = (this.currentBackground + 1) % this.possibleBackgrounds.Length;
+        this.Image.material = this.possibleBackgrounds[this.currentBackground];
     }
 }

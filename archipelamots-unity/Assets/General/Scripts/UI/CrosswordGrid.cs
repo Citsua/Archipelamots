@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -23,7 +22,7 @@ public class CrosswordGrid : MonoBehaviour
 {
     public static CrosswordGrid Current { get; private set; }
 
-    [SerializeField] private GridLayoutGroup gridLayout;
+    [SerializeField] public GridLayoutGroup gridLayout;
     [SerializeField] private LetterGridSquare letterGridSquarePrefab;
     [SerializeField] private DefinitionGridSquareFull definitionGridSquareFullPrefab;
     [SerializeField] private DefinitionGridSquareShared definitionGridSquareSharedPrefab;
@@ -44,7 +43,7 @@ public class CrosswordGrid : MonoBehaviour
         Current = null;
     }
 
-    private void Awake()
+    protected virtual void Awake()
     {
         if (Current != null)
             throw new System.Exception($"{this.GetType()} Singleton already exists in the scene");
@@ -84,7 +83,7 @@ public class CrosswordGrid : MonoBehaviour
         }
     }
 
-    public void Initialize(int gridNb)
+    public virtual void Initialize(int gridNb)
     {
         this.gameObject.SetActive(true);
         this.GridNb = gridNb;
@@ -130,13 +129,22 @@ public class CrosswordGrid : MonoBehaviour
 
     public void Reinitialize()
     {
-        Debug.Log("reinitialize");
         foreach (GridSquare square in this.GridSquares)
         {
             Destroy(square.gameObject);
         }
         this.Initialize(this.GridNb);
         this.Select(this.CurrentlySelected);
+    }
+
+    public void Reinitialize(int gridNb)
+    {
+        foreach (GridSquare square in this.GridSquares)
+        {
+            Destroy(square.gameObject);
+        }
+        this.Initialize(gridNb);
+        this.CurrentlySelected = null;
     }
 
     public void SwitchDirection()

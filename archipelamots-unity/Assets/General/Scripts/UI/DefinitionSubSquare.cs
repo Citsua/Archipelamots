@@ -50,11 +50,18 @@ public class DefinitionSubSquare : MonoBehaviour, IPointerClickHandler
                 break;
         }
 
-        this.arrow.transform.SetParent(this.ParentSquare.Grid.transform, true);
+        // The arrows were annoying me on the preview grid so I just deleted them
+        if (this.ParentSquare.Grid is PreviewGrid)
+            Destroy(this.arrow.gameObject);
+        else
+            this.arrow.transform.SetParent(UI.Instance.gridScaler, true);
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        if (UI.Instance.Panning)
+            return;
+
         if (eventData.button == PointerEventData.InputButton.Left)
             this.OnClick();
     }
@@ -67,6 +74,9 @@ public class DefinitionSubSquare : MonoBehaviour, IPointerClickHandler
 
     private void OnDestroy()
     {
-        Destroy(this.arrow.gameObject);
+        if (this.arrow != null)
+        {
+            Destroy(this.arrow.gameObject);
+        }
     }
 }

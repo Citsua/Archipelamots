@@ -12,6 +12,14 @@ public class ServerConnector : MonoBehaviour
 
     private ArchipelagoSession session;
 
+    public bool Connected
+    {
+        get
+        {
+            return this.session != null;
+        }
+    }
+
     // Necessary for static variables to work correctly when domain reload is disabled
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     static private void Init()
@@ -42,7 +50,14 @@ public class ServerConnector : MonoBehaviour
         Debug.Log($"Received Item '{info.ItemName}'");
         if (info.Flags.HasFlag(ItemFlags.Advancement))
         {
-            CrosswordGrid.Current.Reinitialize();
+            if (info.ItemName.Contains("Definition n°"))
+            {
+                CrosswordGrid.Current.Reinitialize();
+            }
+            else if (info.ItemName.Contains("Grid n°"))
+            {
+                UI.Instance.GridSelector.Initialize();
+            }
         }
         else
         {
@@ -61,8 +76,12 @@ public class ServerConnector : MonoBehaviour
 
     public void SendLocationCheck(string name)
     {
-        Debug.Log($"Completed Check '{name}' (id '{this.session.Locations.GetLocationIdFromName("Archipelamots", name)}')");
-        this.session.Locations.CompleteLocationChecks(this.session.Locations.GetLocationIdFromName("Archipelamots", name));
+        long id = this.session.Locations.GetLocationIdFromName("Archipelamots", name);
+        if (this.session.Locations.AllLocationsChecked.Contains(id))
+            return;
+        
+        Debug.Log($"Completed Check '{name}' (id '{id}')");
+        this.session.Locations.CompleteLocationChecks(id);
     }
 
     public bool HasItem(string name)
