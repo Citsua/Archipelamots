@@ -23,6 +23,11 @@ public class GameManager : MonoBehaviour
         Instance = this;
     }
 
+    private void Start()
+    {
+        UI.Instance.Connection.Show();
+    }
+
     private void Update()
     {
         if (Application.isEditor)

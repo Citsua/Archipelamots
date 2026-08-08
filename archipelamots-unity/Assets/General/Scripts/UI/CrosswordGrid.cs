@@ -86,11 +86,11 @@ public class CrosswordGrid : MonoBehaviour
 
     public void Initialize(int gridNb)
     {
+        this.gameObject.SetActive(true);
         this.GridNb = gridNb;
         int rowCount = YAMLLoader.Instance.Grids[gridNb].grid.Length;
         int colCount = YAMLLoader.Instance.Grids[gridNb].grid[0].Length;
         this.gridLayout.constraintCount = colCount;
-        this.gridLayout.transform.KillAllChildren();
         this.GridSquares = new GridSquare[rowCount, colCount];
         for (int r = 0; r < rowCount; r++)
         {
@@ -131,6 +131,10 @@ public class CrosswordGrid : MonoBehaviour
     public void Reinitialize()
     {
         Debug.Log("reinitialize");
+        foreach (GridSquare square in this.GridSquares)
+        {
+            Destroy(square.gameObject);
+        }
         this.Initialize(this.GridNb);
         this.Select(this.CurrentlySelected);
     }

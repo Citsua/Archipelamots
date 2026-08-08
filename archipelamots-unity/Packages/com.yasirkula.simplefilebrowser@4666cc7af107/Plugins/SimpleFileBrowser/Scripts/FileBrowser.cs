@@ -263,7 +263,7 @@ namespace SimpleFileBrowser
 			}
 		}
 
-		private string m_allFilesFilterText = "All Files (.*)";
+		private string m_allFilesFilterText = "Tous les fichiers (.*)";
 		public static string AllFilesFilterText
 		{
 			get { return Instance.m_allFilesFilterText; }
@@ -638,7 +638,6 @@ namespace SimpleFileBrowser
 					multiSelectionPivotFileEntry = 0;
 					filesScrollRect.verticalNormalizedPosition = 1;
 
-					filenameImage.color = m_skin.InputFieldNormalBackgroundColor;
 					if( m_pickerMode != PickMode.Files )
 					{
 						filenameInputField.text = string.Empty;
@@ -1234,17 +1233,10 @@ namespace SimpleFileBrowser
 		{
 			windowLayoutGroup.spacing = m_skin.RowSpacing;
 
-			for( int i = 0; i < windowResponsiveRows.Length; i++ )
-				windowResponsiveRows[i].preferredHeight = m_skin.RowHeight;
-
 			moreOptionsContextMenuPosition.anchoredPosition = new Vector2( moreOptionsContextMenuPosition.anchoredPosition.x, -m_skin.RowSpacing );
 
-			window.GetComponent<Image>().color = m_skin.WindowColor;
 			middleView.color = m_skin.FilesListColor;
 			middleViewSeparator.color = m_skin.FilesVerticalSeparatorColor;
-
-			titleBackground.color = m_skin.TitleBackgroundColor;
-			m_skin.ApplyTo( titleText, m_skin.TitleTextColor );
 
 			backButton.image.color = m_skin.HeaderButtonsColor;
 			forwardButton.image.color = m_skin.HeaderButtonsColor;
@@ -1270,9 +1262,6 @@ namespace SimpleFileBrowser
 
 			for( int i = 0; i < allButtons.Length; i++ )
 				m_skin.ApplyTo( allButtons[i] );
-
-			m_skin.ApplyTo( filtersDropdown );
-			m_skin.ApplyTo( showHiddenFilesToggle );
 
 			m_skin.ApplyTo( quickLinksScrollRect.verticalScrollbar );
 			m_skin.ApplyTo( filesScrollRect.verticalScrollbar );
@@ -1403,7 +1392,6 @@ namespace SimpleFileBrowser
 			{
 				if( m_pickerMode == PickMode.Files )
 				{
-					filenameImage.color = m_skin.InputFieldInvalidBackgroundColor;
 					return;
 				}
 				else
@@ -1506,7 +1494,6 @@ namespace SimpleFileBrowser
 							catch { }
 
 							// Filename contains invalid characters or is completely whitespace
-							filenameImage.color = m_skin.InputFieldInvalidBackgroundColor;
 							return;
 						}
 
@@ -1579,7 +1566,6 @@ namespace SimpleFileBrowser
 							{
 								if( !m_acceptNonExistingFilename )
 								{
-									filenameImage.color = m_skin.InputFieldInvalidBackgroundColor;
 									return;
 								}
 								else
@@ -1605,7 +1591,6 @@ namespace SimpleFileBrowser
 						}
 						catch( ArgumentException e )
 						{
-							filenameImage.color = m_skin.InputFieldInvalidBackgroundColor;
 							Debug.LogException( e );
 							return;
 						}
@@ -1613,7 +1598,6 @@ namespace SimpleFileBrowser
 
 					if( submittedFileEntryPaths.Count == 0 )
 					{
-						filenameImage.color = m_skin.InputFieldInvalidBackgroundColor;
 						return;
 					}
 
@@ -1960,7 +1944,7 @@ namespace SimpleFileBrowser
 
 		private void OnFilenameInputChanged( string text )
 		{
-			filenameImage.color = m_skin.InputFieldNormalBackgroundColor;
+
 		}
 
 		private void ResetInputFieldTextPosition( TMP_InputField inputField )
@@ -2006,7 +1990,6 @@ namespace SimpleFileBrowser
 
 			filenameInputField.text = initialFilename ?? string.Empty;
 			filenameInputField.interactable = true;
-			filenameImage.color = m_skin.InputFieldNormalBackgroundColor;
 		}
 
 		public void Hide()

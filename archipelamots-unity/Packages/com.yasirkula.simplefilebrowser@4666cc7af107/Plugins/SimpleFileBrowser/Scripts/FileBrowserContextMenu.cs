@@ -112,9 +112,6 @@ namespace SimpleFileBrowser
 			deleteButton.image.color = skin.ContextMenuBackgroundColor;
 			renameButton.image.color = skin.ContextMenuBackgroundColor;
 
-			for( int i = 0; i < allButtonLayoutElements.Length; i++ )
-				allButtonLayoutElements[i].preferredHeight = skin.RowHeight + 1;
-
 			for( int i = 0; i < allButtonTexts.Length; i++ )
 				skin.ApplyTo( allButtonTexts[i], skin.ContextMenuTextColor );
 

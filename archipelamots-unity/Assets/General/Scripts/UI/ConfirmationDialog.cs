@@ -21,14 +21,17 @@ public class ConfirmationDialog : MonoBehaviour
         Instance = null;
     }
 
-    private void Awake()
+    public static void Initialize()
     {
-        if (Instance != null)
-            throw new System.Exception($"{this.GetType()} Singleton already exists in the scene");
-        Instance = this;
+        ConfirmationDialog dialog = FindFirstObjectByType<ConfirmationDialog>(FindObjectsInactive.Include);
 
-        this.confirmButton.onClick.AddListener(this.OnClickConfirm);
-        this.cancelButton.onClick.AddListener(this.OnClickCancel);
+        if (Instance != null)
+            throw new System.Exception($"{dialog.GetType()} Singleton already exists in the scene");
+        Instance = dialog;
+
+        dialog.confirmButton.onClick.AddListener(dialog.OnClickConfirm);
+        dialog.cancelButton.onClick.AddListener(dialog.OnClickCancel);
+        dialog.gameObject.SetActive(false);
     }
 
     private void Update()
@@ -49,11 +52,6 @@ public class ConfirmationDialog : MonoBehaviour
         Instance.text.text = dialogMessage;
         Instance.cancelButton.gameObject.SetActive(true);
         Instance.gameObject.SetActive(true);
-    }
-
-    public static void Hide()
-    {
-        Instance.gameObject.SetActive(false);
     }
 
     private void OnClickConfirm()

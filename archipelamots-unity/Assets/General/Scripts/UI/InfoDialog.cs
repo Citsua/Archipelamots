@@ -20,13 +20,16 @@ public class InfoDialog : MonoBehaviour
         Instance = null;
     }
 
-    private void Awake()
+    public static void Initialize()
     {
-        if (Instance != null)
-            throw new System.Exception($"{this.GetType()} Singleton already exists in the scene");
-        Instance = this;
+        InfoDialog dialog = FindFirstObjectByType<InfoDialog>(FindObjectsInactive.Include);
 
-        this.exitButton.onClick.AddListener(this.OnClickExit);
+        if (Instance != null)
+            throw new System.Exception($"{dialog.GetType()} Singleton already exists in the scene");
+        Instance = dialog;
+
+        dialog.exitButton.onClick.AddListener(dialog.OnClickExit);
+        dialog.gameObject.SetActive(false);
     }
 
     private void Update()
@@ -41,11 +44,6 @@ public class InfoDialog : MonoBehaviour
     {
         Instance.text.text = dialogMessage;
         Instance.gameObject.SetActive(true);
-    }
-
-    public static void Hide()
-    {
-        Instance.gameObject.SetActive(false);
     }
 
     private void OnClickExit()

@@ -52,14 +52,6 @@ namespace SimpleFileBrowser
 		}
 
 		[SerializeField]
-		private float m_rowHeight = 30f;
-		public float RowHeight
-		{
-			get { return m_rowHeight; }
-			set { if( m_rowHeight != value ) { m_rowHeight = value; m_version++; } }
-		}
-
-		[SerializeField]
 		private float m_rowSpacing = 8f;
 		public float RowSpacing
 		{
@@ -68,13 +60,6 @@ namespace SimpleFileBrowser
 		}
 
 		[Header( "File Browser Window" )]
-		[SerializeField]
-		private Color m_windowColor = Color.grey;
-		public Color WindowColor
-		{
-			get { return m_windowColor; }
-			set { if( m_windowColor != value ) { m_windowColor = value; m_version++; } }
-		}
 
 		[SerializeField]
 		private Color m_filesListColor = Color.white;
@@ -90,22 +75,6 @@ namespace SimpleFileBrowser
 		{
 			get { return m_filesVerticalSeparatorColor; }
 			set { if( m_filesVerticalSeparatorColor != value ) { m_filesVerticalSeparatorColor = value; m_version++; } }
-		}
-
-		[SerializeField]
-		private Color m_titleBackgroundColor = Color.black;
-		public Color TitleBackgroundColor
-		{
-			get { return m_titleBackgroundColor; }
-			set { if( m_titleBackgroundColor != value ) { m_titleBackgroundColor = value; m_version++; } }
-		}
-
-		[SerializeField]
-		private Color m_titleTextColor = Color.white;
-		public Color TitleTextColor
-		{
-			get { return m_titleTextColor; }
-			set { if( m_titleTextColor != value ) { m_titleTextColor = value; m_version++; } }
 		}
 
 		[SerializeField]
@@ -162,186 +131,6 @@ namespace SimpleFileBrowser
 		{
 			get { return m_headerContextMenuButton; }
 			set { if( m_headerContextMenuButton != value ) { m_headerContextMenuButton = value; m_version++; } }
-		}
-
-		[Header( "Input Fields" )]
-		[SerializeField]
-		private Color m_inputFieldNormalBackgroundColor = Color.white;
-		public Color InputFieldNormalBackgroundColor
-		{
-			get { return m_inputFieldNormalBackgroundColor; }
-			set { if( m_inputFieldNormalBackgroundColor != value ) { m_inputFieldNormalBackgroundColor = value; m_version++; } }
-		}
-
-		[SerializeField]
-		private Color m_inputFieldInvalidBackgroundColor = Color.red;
-		public Color InputFieldInvalidBackgroundColor
-		{
-			get { return m_inputFieldInvalidBackgroundColor; }
-			set { if( m_inputFieldInvalidBackgroundColor != value ) { m_inputFieldInvalidBackgroundColor = value; m_version++; } }
-		}
-
-		[SerializeField]
-		private Color m_inputFieldTextColor = Color.black;
-		public Color InputFieldTextColor
-		{
-			get { return m_inputFieldTextColor; }
-			set { if( m_inputFieldTextColor != value ) { m_inputFieldTextColor = value; m_version++; } }
-		}
-
-		[SerializeField]
-		private Color m_inputFieldPlaceholderTextColor = new Color( 0f, 0f, 0f, 0.5f );
-		public Color InputFieldPlaceholderTextColor
-		{
-			get { return m_inputFieldPlaceholderTextColor; }
-			set { if( m_inputFieldPlaceholderTextColor != value ) { m_inputFieldPlaceholderTextColor = value; m_version++; } }
-		}
-
-		[SerializeField]
-		private Color m_inputFieldSelectedTextColor = Color.blue;
-		public Color InputFieldSelectedTextColor
-		{
-			get { return m_inputFieldSelectedTextColor; }
-			set { if( m_inputFieldSelectedTextColor != value ) { m_inputFieldSelectedTextColor = value; m_version++; } }
-		}
-
-		[SerializeField]
-		private Color m_inputFieldCaretColor = Color.black;
-		public Color InputFieldCaretColor
-		{
-			get { return m_inputFieldCaretColor; }
-			set { if( m_inputFieldCaretColor != value ) { m_inputFieldCaretColor = value; m_version++; } }
-		}
-
-		[SerializeField]
-		private Sprite m_inputFieldBackground;
-		public Sprite InputFieldBackground
-		{
-			get { return m_inputFieldBackground; }
-			set { if( m_inputFieldBackground != value ) { m_inputFieldBackground = value; m_version++; } }
-		}
-
-		[Header( "Buttons" )]
-		[SerializeField]
-		private Color m_buttonColor = Color.white;
-		public Color ButtonColor
-		{
-			get { return m_buttonColor; }
-			set { if( m_buttonColor != value ) { m_buttonColor = value; m_version++; } }
-		}
-
-		[SerializeField]
-		private Color m_buttonTextColor = Color.black;
-		public Color ButtonTextColor
-		{
-			get { return m_buttonTextColor; }
-			set { if( m_buttonTextColor != value ) { m_buttonTextColor = value; m_version++; } }
-		}
-
-		[SerializeField]
-		private Sprite m_buttonBackground;
-		public Sprite ButtonBackground
-		{
-			get { return m_buttonBackground; }
-			set { if( m_buttonBackground != value ) { m_buttonBackground = value; m_version++; } }
-		}
-
-		[Header( "Dropdowns" )]
-		[SerializeField]
-		private Color m_dropdownColor = Color.white;
-		public Color DropdownColor
-		{
-			get { return m_dropdownColor; }
-			set { if( m_dropdownColor != value ) { m_dropdownColor = value; m_version++; } }
-		}
-
-		[SerializeField]
-		private Color m_dropdownTextColor = Color.black;
-		public Color DropdownTextColor
-		{
-			get { return m_dropdownTextColor; }
-			set { if( m_dropdownTextColor != value ) { m_dropdownTextColor = value; m_version++; } }
-		}
-
-		[SerializeField]
-		private Color m_dropdownArrowColor = Color.black;
-		public Color DropdownArrowColor
-		{
-			get { return m_dropdownArrowColor; }
-			set { if( m_dropdownArrowColor != value ) { m_dropdownArrowColor = value; m_version++; } }
-		}
-
-		[SerializeField]
-		private Color m_dropdownCheckmarkColor = Color.black;
-		public Color DropdownCheckmarkColor
-		{
-			get { return m_dropdownCheckmarkColor; }
-			set { if( m_dropdownCheckmarkColor != value ) { m_dropdownCheckmarkColor = value; m_version++; } }
-		}
-
-		[SerializeField]
-		private Sprite m_dropdownBackground;
-		public Sprite DropdownBackground
-		{
-			get { return m_dropdownBackground; }
-			set { if( m_dropdownBackground != value ) { m_dropdownBackground = value; m_version++; } }
-		}
-
-		[SerializeField]
-		private Sprite m_dropdownArrow;
-		public Sprite DropdownArrow
-		{
-			get { return m_dropdownArrow; }
-			set { if( m_dropdownArrow != value ) { m_dropdownArrow = value; m_version++; } }
-		}
-
-		[SerializeField]
-		private Sprite m_dropdownCheckmark;
-		public Sprite DropdownCheckmark
-		{
-			get { return m_dropdownCheckmark; }
-			set { if( m_dropdownCheckmark != value ) { m_dropdownCheckmark = value; m_version++; } }
-		}
-
-		[Header( "Toggles" )]
-		[SerializeField]
-		private Color m_toggleColor = Color.white;
-		public Color ToggleColor
-		{
-			get { return m_toggleColor; }
-			set { if( m_toggleColor != value ) { m_toggleColor = value; m_version++; } }
-		}
-
-		[SerializeField]
-		private Color m_toggleTextColor = Color.black;
-		public Color ToggleTextColor
-		{
-			get { return m_toggleTextColor; }
-			set { if( m_toggleTextColor != value ) { m_toggleTextColor = value; m_version++; } }
-		}
-
-		[SerializeField]
-		private Color m_toggleCheckmarkColor = Color.black;
-		public Color ToggleCheckmarkColor
-		{
-			get { return m_toggleCheckmarkColor; }
-			set { if( m_toggleCheckmarkColor != value ) { m_toggleCheckmarkColor = value; m_version++; } }
-		}
-
-		[SerializeField]
-		private Sprite m_toggleBackground;
-		public Sprite ToggleBackground
-		{
-			get { return m_toggleBackground; }
-			set { if( m_toggleBackground != value ) { m_toggleBackground = value; m_version++; } }
-		}
-
-		[SerializeField]
-		private Sprite m_toggleCheckmark;
-		public Sprite ToggleCheckmark
-		{
-			get { return m_toggleCheckmark; }
-			set { if( m_toggleCheckmark != value ) { m_toggleCheckmark = value; m_version++; } }
 		}
 
 		[Header( "Scrollbars" )]
@@ -559,57 +348,12 @@ namespace SimpleFileBrowser
 
 		public void ApplyTo( TMP_InputField inputField )
 		{
-			inputField.image.color = m_inputFieldNormalBackgroundColor;
-			inputField.image.sprite = m_inputFieldBackground;
-			inputField.selectionColor = m_inputFieldSelectedTextColor;
-			inputField.caretColor = m_inputFieldCaretColor;
 
-			ApplyTo( inputField.textComponent, m_inputFieldTextColor );
-			if( inputField.placeholder as TMP_Text )
-				ApplyTo( (TMP_Text) inputField.placeholder, m_inputFieldPlaceholderTextColor );
 		}
 
 		public void ApplyTo( Button button )
 		{
-			button.image.color = m_buttonColor;
-			button.image.sprite = m_buttonBackground;
 
-			ApplyTo( button.GetComponentInChildren<TMP_Text>(), m_buttonTextColor );
-		}
-
-		public void ApplyTo( TMP_Dropdown dropdown )
-		{
-			dropdown.image.color = m_dropdownColor;
-			dropdown.image.sprite = m_dropdownBackground;
-			dropdown.template.GetComponent<Image>().color = m_dropdownColor;
-
-			Image dropdownArrow = dropdown.transform.Find( "Arrow" ).GetComponent<Image>();
-			dropdownArrow.color = m_dropdownArrowColor;
-			dropdownArrow.sprite = m_dropdownArrow;
-
-			ApplyTo( dropdown.captionText, m_dropdownTextColor );
-			ApplyTo( dropdown.itemText, m_dropdownTextColor );
-
-			RectTransform dropdownItem = (RectTransform) dropdown.itemText.transform.parent;
-			dropdownItem.sizeDelta = new Vector2( dropdownItem.sizeDelta.x, m_rowHeight );
-			dropdownItem.Find( "Item Background" ).GetComponent<Image>().color = m_dropdownColor;
-
-			RectTransform dropdownScrollContent = (RectTransform) dropdownItem.parent;
-			dropdownScrollContent.sizeDelta = new Vector2( dropdownScrollContent.sizeDelta.x, dropdownItem.sizeDelta.y + 2f );
-
-			Image dropdownCheckmark = dropdownItem.Find( "Item Checkmark" ).GetComponent<Image>();
-			dropdownCheckmark.color = m_dropdownCheckmarkColor;
-			dropdownCheckmark.sprite = m_dropdownCheckmark;
-		}
-
-		public void ApplyTo( Toggle toggle )
-		{
-			toggle.image.color = m_toggleColor;
-			toggle.image.sprite = m_toggleBackground;
-			toggle.graphic.color = m_toggleCheckmarkColor;
-			( (Image) toggle.graphic ).sprite = m_toggleCheckmark;
-
-			ApplyTo( toggle.GetComponentInChildren<TMP_Text>(), m_toggleTextColor );
 		}
 
 		public void ApplyTo( Scrollbar scrollbar )

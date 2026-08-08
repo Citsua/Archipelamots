@@ -10,11 +10,6 @@ public class ServerConnector : MonoBehaviour
 {
     public static ServerConnector Instance { get; private set; }
 
-    public string server;
-    public int port;
-    public string user;
-    public string password;
-
     private ArchipelagoSession session;
 
     // Necessary for static variables to work correctly when domain reload is disabled
@@ -31,21 +26,20 @@ public class ServerConnector : MonoBehaviour
         Instance = this;
     }
 
-    private void Start()
+    public void Connect()
     {
-        Debug.Log("start");
-        this.session = Connect(this.server, this.port, this.user, this.password);
+        this.session = Connect(UI.Instance.Connection.Address, UI.Instance.Connection.Port, UI.Instance.Connection.Slot, UI.Instance.Connection.Password);
         if (this.session != null)
         {
             this.session.Items.ItemReceived += this.OnItemReceived;
-            YAMLLoader.Instance.ShowDialog();
+            YAMLLoader.Instance.ShowFileBrowser();
         }
     }
 
     private void OnItemReceived(ReceivedItemsHelper helper)
     {
         ItemInfo info = helper.DequeueItem();
-        Debug.Log("Received item " + info.ItemName);
+        Debug.Log($"Received Item '{info.ItemName}'");
         if (info.Flags.HasFlag(ItemFlags.Advancement))
         {
             CrosswordGrid.Current.Reinitialize();
@@ -67,7 +61,7 @@ public class ServerConnector : MonoBehaviour
 
     public void SendLocationCheck(string name)
     {
-        Debug.Log($"completed check {name} (id {this.session.Locations.GetLocationIdFromName("Archipelamots", name)})");
+        Debug.Log($"Completed Check '{name}' (id '{this.session.Locations.GetLocationIdFromName("Archipelamots", name)}')");
         this.session.Locations.CompleteLocationChecks(this.session.Locations.GetLocationIdFromName("Archipelamots", name));
     }
 
@@ -84,7 +78,6 @@ public class ServerConnector : MonoBehaviour
         try
         {
             session = ArchipelagoSessionFactory.CreateSession(server, port);
-            // handle TryConnectAndLogin attempt here and save the returned object to `result`
             result = session.TryConnectAndLogin("Archipelamots", user, ItemsHandlingFlags.AllItems);
         }
         catch (Exception e)
@@ -105,7 +98,8 @@ public class ServerConnector : MonoBehaviour
                 errorMessage += $"\n    {error}";
             }
 
-            return null; // Did not connect, show the user the contents of `errorMessage`
+            InfoDialog.Show(errorMessage);
+            return null;
         }
 
         // Successfully connected, `ArchipelagoSession` (assume statically defined as `session` from now on) can now be

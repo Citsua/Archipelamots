@@ -8,7 +8,8 @@ public class DefinitionSubSquare : MonoBehaviour, IPointerClickHandler
 {
     [SerializeField] private TMP_Text text;
     [SerializeField] private Image arrow;
-    [SerializeField] private GameObject notRevealedBackground;
+    [SerializeField] private Image notRevealedBackground;
+    [SerializeField] private Image revealedBackground;
 
     public DefinitionGridSquare ParentSquare { get; private set; }
     public int StartingR { get; private set; }
@@ -21,8 +22,9 @@ public class DefinitionSubSquare : MonoBehaviour, IPointerClickHandler
         YAML.Definition definition = YAMLLoader.Instance.Grids[this.ParentSquare.Grid.GridNb].GetDefinition(defCellInfo.word, out int index);
         bool revealed = definition.revealed || ServerConnector.Instance.HasItem($"Definition n°{index + 1} from Grid n°{this.ParentSquare.Grid.GridNb + 1}");
         this.text.text = revealed ? $"N°{index + 1} : {definition.definition}" : $"DEFINITION N°{index + 1}";
-        this.notRevealedBackground.SetActive(!revealed);
+        this.notRevealedBackground.gameObject.SetActive(!revealed);
         this.arrow.sprite = this.ParentSquare.Grid.arrowSprites.Find(x => x.character == defCellInfo.arrow).sprite;
+        this.arrow.color = revealed ? this.revealedBackground.color : this.notRevealedBackground.color;
 
         switch (defCellInfo.arrow)
         {
@@ -61,5 +63,10 @@ public class DefinitionSubSquare : MonoBehaviour, IPointerClickHandler
     {
         this.ParentSquare.Grid.LastClicked = this.ParentSquare;
         this.ParentSquare.Grid.Select(this);
+    }
+
+    private void OnDestroy()
+    {
+        Destroy(this.arrow.gameObject);
     }
 }

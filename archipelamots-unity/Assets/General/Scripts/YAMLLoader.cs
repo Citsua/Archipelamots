@@ -25,11 +25,11 @@ public class YAMLLoader : MonoBehaviour
         Instance = this;
     }
 
-    public void ShowDialog()
+    public void ShowFileBrowser()
     {
         try
         {
-            FileBrowser.ShowLoadDialog(this.OnFileLoadingSuccess, this.OnFileLoadingCancel, FileBrowser.PickMode.Files);
+            FileBrowser.ShowLoadDialog(this.OnFileLoadingSuccess, this.OnFileLoadingCancel, FileBrowser.PickMode.Files, false, null, null, "Charger le fichier YAML généré", "Sélectionner");
         }
         catch (System.Exception ex)
         {
@@ -52,6 +52,8 @@ public class YAMLLoader : MonoBehaviour
             string obj = $"grid_data:\n{this.YAML.Archipelamots.grid_data}";
             YAML.ArchipelagoGridDataYAML gridData = deserializer.Deserialize<YAML.ArchipelagoGridDataYAML>(obj);
             this.Grids = gridData.grid_data;
+
+            UI.Instance.Connection.Hide();
             SavingUtility.LoadSaveData();
             CrosswordGrid.Current.Initialize(0);
         }
