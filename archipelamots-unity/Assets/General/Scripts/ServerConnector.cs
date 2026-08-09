@@ -1,16 +1,16 @@
 using Archipelago.MultiClient.Net;
 using Archipelago.MultiClient.Net.Enums;
-using Archipelago.MultiClient.Net.Helpers;
 using Archipelago.MultiClient.Net.Models;
-using Sirenix.OdinInspector;
 using System;
-using System.Linq;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ServerConnector : MonoBehaviour
 {
     public static ServerConnector Instance { get; private set; }
 
+    private Dictionary<string, int> itemsReceived = new Dictionary<string, int>();
     private ArchipelagoSession session;
 
     public bool Connected
@@ -45,7 +45,10 @@ public class ServerConnector : MonoBehaviour
 
     private void OnDestroy()
     {
-        this.session.Socket.DisconnectAsync();
+        if (this.session != null)
+        {
+            this.session.Socket.DisconnectAsync();
+        }
     }
 
     public void Connect()
@@ -69,32 +72,16 @@ public class ServerConnector : MonoBehaviour
 
     private void ReceiveItem(ItemInfo info)
     {
-        Debug.Log($"Received Item '{info.ItemName}'");
-
-        if (info.Flags.HasFlag(ItemFlags.Advancement))
+        if (this.itemsReceived.ContainsKey(info.ItemName))
         {
-            if (info.ItemName.Contains("Definition n°"))
-            {
-                CrosswordGrid.Current.Reinitialize();
-            }
-            else if (info.ItemName.Contains("Grid n°"))
-            {
-                UI.Instance.GridSelector.Initialize();
-            }
+            this.itemsReceived[info.ItemName]++;
         }
         else
         {
-            if (info.ItemName == "Word Check")
-            {
-                SavingUtility.IncreaseNumberOfWordChecks();
-            }
-            else if (info.ItemName == "Letter Reveal")
-            {
-                SavingUtility.IncreaseNumberOfLetterReveals();
-            }
+            this.itemsReceived.Add(info.ItemName, 1);
         }
 
-        UI.Instance.UpdatePowerUI();
+        SavingUtility.ReceiveItem(ref this.itemsReceived, info);
     }
 
     public void SendLocationCheck(string name)
@@ -102,14 +89,17 @@ public class ServerConnector : MonoBehaviour
         long id = this.session.Locations.GetLocationIdFromName("Archipelamots", name);
         if (this.session.Locations.AllLocationsChecked.Contains(id))
             return;
-        
+
         Debug.Log($"Completed Check '{name}' (id '{id}')");
+        this.StartCoroutine(this.CScoutLocation(id));
         this.session.Locations.CompleteLocationChecks(id);
     }
 
-    public bool HasItem(string name)
+    private IEnumerator CScoutLocation(long id)
     {
-        return this.session.Items.AllItemsReceived.ToList().Exists(x => x.ItemName == name);
+        var task = this.session.Locations.ScoutLocationsAsync(HintCreationPolicy.None, id);
+        yield return new WaitUntil(() => task.IsCompleted);
+        UI.Instance.NotificationLog.SendLocation(task.Result[id].ItemName, task.Result[id].Player);
     }
 
     private ArchipelagoSession Connect(string server, int port, string user, string password)
@@ -120,7 +110,7 @@ public class ServerConnector : MonoBehaviour
         try
         {
             session = ArchipelagoSessionFactory.CreateSession(server, port);
-            result = session.TryConnectAndLogin("Archipelamots", user, ItemsHandlingFlags.RemoteItems);
+            result = session.TryConnectAndLogin("Archipelamots", user, ItemsHandlingFlags.AllItems);
         }
         catch (Exception e)
         {

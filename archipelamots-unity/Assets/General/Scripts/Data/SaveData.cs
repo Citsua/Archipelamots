@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
@@ -23,8 +24,12 @@ public class SaveData
     public int letterReveals;
     public int wordChecks;
 
+    public Dictionary<string, int> ItemsReceived { get; set; }
+
     public SaveData()
     {
         this.version = SavingUtility.VERSION;
+        this.firstSeed = YAMLLoader.Instance.Grids[0].seedString;
+        this.ItemsReceived = new Dictionary<string, int>();
     }
 }

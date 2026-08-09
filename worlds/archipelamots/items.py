@@ -71,8 +71,9 @@ def create_all_items(world: ArchipelamotsWorld) -> None:
         item = world.create_item(f"Grid n°{str(x + 1)}")
         itempool.append(item)
         for y in range(len(world.grids_data[x]["slots"])):
-            item = world.create_item(f"Definition n°{str(y + 1)} from Grid n°{str(x + 1)}")
-            itempool.append(item)
+            if not world.grids_data[x]["definitions"][y]["revealed"]:
+                item = world.create_item(f"Definition n°{str(y + 1)} from Grid n°{str(x + 1)}")
+                itempool.append(item)
 
         item = world.create_item(f"Word Check")
         for y in range(world.options.word_checks_per_grid):

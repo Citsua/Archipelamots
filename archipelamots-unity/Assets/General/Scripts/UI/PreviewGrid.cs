@@ -15,7 +15,7 @@ public class PreviewGrid : CrosswordGrid
     public override void Initialize(int gridNb)
     {
         base.Initialize(gridNb);
-        bool locked = !ServerConnector.Instance.HasItem($"Grid n°{gridNb + 1}");
+        bool locked = !SavingUtility.HasItem($"Grid n°{gridNb + 1}");
         this.locked.SetActive(locked);
         this.button.interactable = !locked && Current.GridNb != this.GridNb;
         this.button.onClick.AddListener(this.OnClick);

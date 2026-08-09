@@ -23,6 +23,7 @@ public class UI : MonoBehaviour
 
     public ConnectionUI Connection {  get; private set; }
     public GridSelectorUI GridSelector { get; private set; }
+    public NotificationLogUI NotificationLog { get; private set; }
 
     public bool Panning
     {
@@ -49,6 +50,7 @@ public class UI : MonoBehaviour
 
         this.Connection = FindFirstObjectByType<ConnectionUI>(FindObjectsInactive.Include);
         this.GridSelector = FindFirstObjectByType<GridSelectorUI>(FindObjectsInactive.Include);
+        this.NotificationLog = FindFirstObjectByType<NotificationLogUI>(FindObjectsInactive.Include);
     }
 
     private void Start()

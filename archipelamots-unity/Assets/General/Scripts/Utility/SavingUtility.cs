@@ -1,10 +1,11 @@
+using Archipelago.MultiClient.Net.Enums;
+using Archipelago.MultiClient.Net.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.Serialization.Formatters.Binary;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public static class SavingUtility
 {
@@ -44,11 +45,11 @@ public static class SavingUtility
             OverwriteSaveData();
             return;
         }
+        file.Close();
 
         try
         {
-            BinaryFormatter bf = new BinaryFormatter();
-            CurrentSaveData = (SaveData) bf.Deserialize(file);
+            CurrentSaveData = JsonConvert.DeserializeObject<SaveData>(File.ReadAllText(destination));
             if (CurrentSaveData.firstSeed != YAMLLoader.Instance.Grids[0].seedString)
             {
                 Debug.LogWarning($"Save file was related to another Archipelago generation. Backing up, then recreating a save file.");
@@ -82,9 +83,9 @@ public static class SavingUtility
             }
         }
 
-        file.Close();
-
         CurrentSaveData.version = VERSION;
+        if (CurrentSaveData.ItemsReceived == null)
+            CurrentSaveData.ItemsReceived = new SerializedDictionary<string, int>();
         OverwriteSaveData();
     }
 
@@ -98,14 +99,14 @@ public static class SavingUtility
         try
         {
             string destination = SaveDataFilePath();
-            FileStream file;
 
+            FileStream file;
             if (File.Exists(destination)) file = File.OpenWrite(destination);
             else file = File.Create(destination);
-
-            BinaryFormatter bf = new BinaryFormatter();
-            bf.Serialize(file, CurrentSaveData);
             file.Close();
+
+            string output = JsonConvert.SerializeObject(CurrentSaveData);
+            File.WriteAllText(destination, output);
         }
         catch (Exception e)
         {
@@ -117,7 +118,6 @@ public static class SavingUtility
     {
         if (CurrentSaveData.gridsData == null)
         {
-            CurrentSaveData.firstSeed = YAMLLoader.Instance.Grids[0].seedString;
             CurrentSaveData.gridsData = new SaveData.GridData[YAMLLoader.Instance.Grids.Length];
             for (int i = 0; i < CurrentSaveData.gridsData.Length; i++)
             {
@@ -161,6 +161,58 @@ public static class SavingUtility
                 }
             }
         }
+    }
+
+    public static void ReceiveItem(ref Dictionary<string, int> itemsReceived, ItemInfo info)
+    {
+        if (CurrentSaveData.ItemsReceived.ContainsKey(info.ItemName))
+        {
+            if (itemsReceived[info.ItemName] > CurrentSaveData.ItemsReceived[info.ItemName])
+            {
+                CurrentSaveData.ItemsReceived[info.ItemName]++;
+            }
+            else
+            {
+                return;
+            }
+        }
+        else
+        {
+            CurrentSaveData.ItemsReceived.Add(info.ItemName, 1);
+        }
+
+        Debug.Log($"Received Item '{info.ItemName}'");
+        UI.Instance.NotificationLog.ReceiveItem(info);
+        if (info.Flags.HasFlag(ItemFlags.Advancement))
+        {
+            if (info.ItemName.Contains("Definition n°"))
+            {
+                CrosswordGrid.Current.Reinitialize();
+            }
+            else if (info.ItemName.Contains("Grid n°"))
+            {
+                UI.Instance.GridSelector.Initialize();
+            }
+            OverwriteSaveData();
+        }
+        else
+        {
+            if (info.ItemName == "Word Check")
+            {
+                IncreaseNumberOfWordChecks();
+            }
+            else if (info.ItemName == "Letter Reveal")
+            {
+                IncreaseNumberOfLetterReveals();
+            }
+        }
+
+        UI.Instance.UpdatePowerUI();
+    }
+
+    public static bool HasItem(string name)
+    {
+        return CurrentSaveData.ItemsReceived.ContainsKey(name) && CurrentSaveData.ItemsReceived[name] > 0;
     }
 
     public static int GetNumberOfLetterReveals()

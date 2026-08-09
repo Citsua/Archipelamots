@@ -23,7 +23,16 @@ def set_all_entrance_rules(world: ArchipelamotsWorld) -> None:
     pass
 
 def set_all_location_rules(world: ArchipelamotsWorld) -> None:
-    pass
+    for x in range(world.options.total_nb_of_grids):
+        for y in range(len(world.grids_data[x]["slots"])):
+            location = world.get_location(f"Complete Word n°{str(y + 1)} in Grid n°{str(x + 1)}")
+            is_pre_revealed = world.grids_data[x]["definitions"][y]["revealed"]
+            has_grid = Has(f"Grid n°{str(x + 1)}")
+            if is_pre_revealed:
+                world.set_rule(location, has_grid)
+            else:
+                has_grid_and_definition = has_grid & Has(f"Definition n°{str(y + 1)} from Grid n°{str(x + 1)}")
+                world.set_rule(location, has_grid_and_definition)
 
 def set_completion_condition(world: ArchipelamotsWorld) -> None:
     # In our case, we went for the Victory event design pattern (see create_events() in locations.py).

@@ -23,7 +23,7 @@ public class DefinitionSubSquare : MonoBehaviour, IPointerClickHandler
     {
         this.ParentSquare = parentSquare;
         YAML.Definition definition = YAMLLoader.Instance.Grids[this.ParentSquare.Grid.GridNb].GetDefinition(defCellInfo.word, out int index);
-        bool revealed = definition.revealed || ServerConnector.Instance.HasItem($"Definition n°{index + 1} from Grid n°{this.ParentSquare.Grid.GridNb + 1}");
+        bool revealed = definition.revealed || SavingUtility.HasItem($"Definition n°{index + 1} from Grid n°{this.ParentSquare.Grid.GridNb + 1}");
         this.text.text = revealed ? $"N°{index + 1} : {definition.definition}" : $"DEFINITION N°{index + 1}";
         this.notRevealedBackground.gameObject.SetActive(!revealed);
 

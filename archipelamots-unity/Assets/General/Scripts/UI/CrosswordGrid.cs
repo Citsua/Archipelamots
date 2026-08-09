@@ -432,7 +432,6 @@ public class CrosswordGrid : MonoBehaviour
         LetterGridSquare lastValidLetter = gridSquare;
         int r = gridSquare.R;
         int c = gridSquare.C;
-        Debug.Log($"FindFirstLetterOfWord (r{r}, c{c})");
         while (c >= 0 && r >= 0)
         {
             if (this.GridSquares[r, c] is LetterGridSquare)
