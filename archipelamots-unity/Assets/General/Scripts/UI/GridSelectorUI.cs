@@ -1,5 +1,6 @@
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public class GridSelectorUI : MonoBehaviour
@@ -9,6 +10,8 @@ public class GridSelectorUI : MonoBehaviour
     [SerializeField] private RectTransform mainGridTransform;
     [SerializeField] private TweenInfo showTween;
     [SerializeField] private TweenInfo hideTween;
+
+    [SerializeField] private SerializedDictionary<Vector2Int, float> scalePerGridSize = new SerializedDictionary<Vector2Int, float>();
 
     public bool Visible { get; private set; }
 
@@ -70,7 +73,12 @@ public class GridSelectorUI : MonoBehaviour
         this.previewGridsAnchor.KillAllChildren();
         for (int i = 0; i < YAMLLoader.Instance.YAML.Archipelamots.total_nb_of_grids; i++)
         {
+            if (i == CrosswordGrid.Current.GridNb)
+                continue;
+
+            Vector2Int gridSize = new Vector2Int(YAMLLoader.Instance.Grids[i].grid.Length, YAMLLoader.Instance.Grids[i].grid[0].Length);
             PreviewGrid grid = Instantiate(this.previewGridPrefab, this.previewGridsAnchor);
+            grid.transform.localScale = Vector3.one * this.scalePerGridSize[gridSize];
             grid.Initialize(i);
         }
         this.Invoke(nameof(this.RebuildLayout), 0.05f);

@@ -1,4 +1,4 @@
-import { generate, getAllWords } from 'mots-fleches'
+import { generate, getAllWords, getEasyWords, getEasyAndMediumWords } from 'mots-fleches'
 import { load, dump } from 'js-yaml'
 import { readFileSync, readdirSync, writeFileSync } from 'node:fs'
 import * as cheerio from 'cheerio'
@@ -21,16 +21,47 @@ console.log(`yaml file: ${filePath}`);
 var doc = load(readFileSync(filePath, 'utf8'));
 console.log(doc);
 
-var grids = [];
+// grid sizes
+var easy = [7, 7]
+var medium = [7, 10]
+var hard = [10, 10]
+
 // generate grids
+var grids = [];
 for (var i = 0; i < doc.Archipelamots.total_nb_of_grids; i++) {
   console.log(`generating grid ${i + 1}`);
+
+  var difficulty = i / (doc.Archipelamots.total_nb_of_grids - 1);
+  var gridSize = []
+  var words = []
+  if (difficulty < 0.34) {
+    gridSize = easy;
+    words = getEasyWords()
+  }
+  else if (difficulty < 0.67) {
+    gridSize = medium;
+    words = getEasyAndMediumWords()
+  }
+  else {
+    gridSize = hard;
+    words = getAllWords()
+  }
+
+ console.log("difficulty: " + difficulty);
+ console.log("nb of possible words: " + words.length);
+ console.log(`size: (${gridSize[0]}, ${gridSize[1]})`);
+
   var correct;
   do {
     correct = true;
+
     console.log(`trying to generate`);
-    var result = generate(getAllWords(), 6, 12);
+    var result = null;
+    while (result == null) {
+      result = generate(words, gridSize[0], gridSize[1]);
+    }
     console.log(result);
+
     var defCellsArray = [];
     for (let [key, value] of result.defCells.entries()) {
       var coords = key.split(',');
@@ -89,9 +120,6 @@ for (var i = 0; i < doc.Archipelamots.total_nb_of_grids; i++) {
 console.log("generated all grids")
 
 // add the grids into the yaml
-/*var gridData = {};
-gridData["data"] = grids;
-doc.Archipelamots["grid_data"] = gridData;*/
 doc.Archipelamots["grid_data"] = dump(grids);
 console.log(util.inspect(doc, {showHidden: false, depth: null, colors: true}))
 var newFilePath = `${filePath.substring(0, filePath.indexOf('.yaml'))}-generated.yaml`;
@@ -127,27 +155,3 @@ function getRandomIds(array, count) {
   var scrambled = array.sort(() => Math.random() - 0.5);
   return scrambled.slice(0, count);
 }
-
-// read and parse definitions database
-/*var databaseString = readFileSync(`${folderPath}\\definitions.tsv`, 'utf8');
-var database = [];
-
-var x = databaseString.split('\n');
-for (var i = 0; i < x.length; i++) {
-  var y = x[i].split('\t');
-  database.push({
-      word:   y[0],
-      definitions: y.slice(1, y.length)
-  });
-}
-console.log(database);*/
-
-/*var databaseEquivalent = database.find(x => x.word == word);
-if (databaseEquivalent != undefined) {
-  result.definitions.push({ word: word, definition: databaseEquivalent[Math.floor(Math.random() * databaseEquivalent.length)] })
-}
-else {
-  console.log(`word '${word}' wasn't found in the definitions database. replacing the grid.`);
-  correct = false;
-  break;
-}*/

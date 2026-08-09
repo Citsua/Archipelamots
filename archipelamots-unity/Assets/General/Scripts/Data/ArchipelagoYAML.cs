@@ -22,6 +22,8 @@ namespace YAML
         public int nb_of_checks_per_grid;
         public int nb_of_starting_grids;
         public int percentage_of_definitions_unlocked_at_start;
+        public int letter_reveals_per_grid;
+        public int word_checks_per_grid;
 
         public string[] local_items;
         public string[] non_local_items;

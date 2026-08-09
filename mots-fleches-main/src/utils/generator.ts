@@ -747,7 +747,7 @@ export function generate(
 ): GenerationResult | null {
   const t0 = performance.now();
   const {
-    templateAttempts = 500,
+    templateAttempts = 2000,
     nodeBudget = 50000
   } = opts;
 
@@ -759,6 +759,8 @@ export function generate(
     seedString = randomSeedString();
     seed = hashSeedString(seedString);
   }
+  console.log("seed: " + seed);
+  console.log("seedString: " + seedString);
 
   const index = buildIndex(words);
 

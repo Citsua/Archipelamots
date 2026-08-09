@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 6d93f87de16a6b84db1a5b98473919c9
+guid: 9899ce4c71b7d814680ae8314ba6bfa5
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7997587380414667588
-    second: Arrow-Bottom_0
+      213: 3242354359071680548
+    second: Arrow-LeftBottom_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Arrow-Bottom_0
+      name: Arrow-LeftBottom_0
       rect:
         serializedVersion: 2
-        x: 165
-        y: 277
-        width: 182
-        height: 235
+        x: 219
+        y: 21
+        width: 293
+        height: 258
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: cb4ac3a86acd20190800000000000000
-      internalID: -7997587380414667588
+      spriteID: 42828606c182ffc20800000000000000
+      internalID: 3242354359071680548
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Arrow-Bottom_0: -7997587380414667588
+      Arrow-LeftBottom_0: 3242354359071680548
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -2,19 +2,22 @@
 using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.EventSystems;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public class DefinitionSubSquare : MonoBehaviour, IPointerClickHandler
 {
     [SerializeField] private TMP_Text text;
-    [SerializeField] private Image arrow;
     [SerializeField] private Image notRevealedBackground;
     [SerializeField] private Image revealedBackground;
+
+    [SerializeField] private SerializedDictionary<char, Image> arrows = new SerializedDictionary<char, Image>();
 
     public DefinitionGridSquare ParentSquare { get; private set; }
     public int StartingR { get; private set; }
     public int StartingC { get; private set; }
     public Direction Direction { get; private set; }
+    private Image activeArrow;
 
     public void Initialize(DefinitionGridSquare parentSquare, YAML.DefCellInfo defCellInfo)
     {
@@ -23,8 +26,22 @@ public class DefinitionSubSquare : MonoBehaviour, IPointerClickHandler
         bool revealed = definition.revealed || ServerConnector.Instance.HasItem($"Definition n°{index + 1} from Grid n°{this.ParentSquare.Grid.GridNb + 1}");
         this.text.text = revealed ? $"N°{index + 1} : {definition.definition}" : $"DEFINITION N°{index + 1}";
         this.notRevealedBackground.gameObject.SetActive(!revealed);
-        this.arrow.sprite = this.ParentSquare.Grid.arrowSprites.Find(x => x.character == defCellInfo.arrow).sprite;
-        this.arrow.color = revealed ? this.revealedBackground.color : this.notRevealedBackground.color;
+
+        // Hide other arrows
+        foreach (var item in this.arrows)
+        {
+            item.Value.gameObject.SetActive(false);
+        }
+
+        // The arrows were annoying me on the preview grid so I just deleted them
+        if (this.ParentSquare.Grid is not PreviewGrid)
+        {
+            this.activeArrow = this.arrows[defCellInfo.arrow];
+            this.activeArrow.gameObject.SetActive(true);
+            this.activeArrow.transform.SetParent(UI.Instance.gridScaler, true);
+            this.activeArrow.color = revealed ? this.revealedBackground.color : this.notRevealedBackground.color;
+        }
+           
 
         switch (defCellInfo.arrow)
         {
@@ -38,6 +55,11 @@ public class DefinitionSubSquare : MonoBehaviour, IPointerClickHandler
                 this.StartingC = this.ParentSquare.C + 1;
                 this.StartingR = this.ParentSquare.R;
                 break;
+            case '⤓':
+                this.Direction = Direction.Vertical;
+                this.StartingC = this.ParentSquare.C - 1;
+                this.StartingR = this.ParentSquare.R;
+                break;
             case '↳':
                 this.Direction = Direction.Horizontal;
                 this.StartingC = this.ParentSquare.C;
@@ -48,13 +70,15 @@ public class DefinitionSubSquare : MonoBehaviour, IPointerClickHandler
                 this.StartingC = this.ParentSquare.C;
                 this.StartingR = this.ParentSquare.R + 1;
                 break;
+            case '↱':
+                this.Direction = Direction.Horizontal;
+                this.StartingC = this.ParentSquare.C;
+                this.StartingR = this.ParentSquare.R - 1;
+                break;
+            default:
+                Debug.LogError(defCellInfo.arrow + " : " + definition.word + ", " + this.ParentSquare.Grid.GridNb);
+                break;
         }
-
-        // The arrows were annoying me on the preview grid so I just deleted them
-        if (this.ParentSquare.Grid is PreviewGrid)
-            Destroy(this.arrow.gameObject);
-        else
-            this.arrow.transform.SetParent(UI.Instance.gridScaler, true);
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -74,9 +98,9 @@ public class DefinitionSubSquare : MonoBehaviour, IPointerClickHandler
 
     private void OnDestroy()
     {
-        if (this.arrow != null)
+        if (this.activeArrow != null)
         {
-            Destroy(this.arrow.gameObject);
+            Destroy(this.activeArrow.gameObject);
         }
     }
 }

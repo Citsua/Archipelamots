@@ -2,6 +2,7 @@ using Archipelago.MultiClient.Net;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Helpers;
 using Archipelago.MultiClient.Net.Models;
+using Sirenix.OdinInspector;
 using System;
 using System.Linq;
 using UnityEngine;
@@ -34,20 +35,42 @@ public class ServerConnector : MonoBehaviour
         Instance = this;
     }
 
+    private void FixedUpdate()
+    {
+        if (this.session == null || !CrosswordGrid.Current.Initialized)
+            return;
+
+        this.CheckForNewItems();
+    }
+
+    private void OnDestroy()
+    {
+        this.session.Socket.DisconnectAsync();
+    }
+
     public void Connect()
     {
-        this.session = Connect(UI.Instance.Connection.Address, UI.Instance.Connection.Port, UI.Instance.Connection.Slot, UI.Instance.Connection.Password);
+        this.session = this.Connect(UI.Instance.Connection.Address, UI.Instance.Connection.Port, UI.Instance.Connection.Slot, UI.Instance.Connection.Password);
         if (this.session != null)
         {
-            this.session.Items.ItemReceived += this.OnItemReceived;
             YAMLLoader.Instance.ShowFileBrowser();
         }
     }
 
-    private void OnItemReceived(ReceivedItemsHelper helper)
+    private void CheckForNewItems()
     {
-        ItemInfo info = helper.DequeueItem();
+        ItemInfo info = this.session.Items.PeekItem();
+        if (info != null)
+        {
+            this.session.Items.DequeueItem();
+            this.ReceiveItem(info);
+        } 
+    }
+
+    private void ReceiveItem(ItemInfo info)
+    {
         Debug.Log($"Received Item '{info.ItemName}'");
+
         if (info.Flags.HasFlag(ItemFlags.Advancement))
         {
             if (info.ItemName.Contains("Definition n°"))
@@ -89,7 +112,7 @@ public class ServerConnector : MonoBehaviour
         return this.session.Items.AllItemsReceived.ToList().Exists(x => x.ItemName == name);
     }
 
-    private static ArchipelagoSession Connect(string server, int port, string user, string password)
+    private ArchipelagoSession Connect(string server, int port, string user, string password)
     {
         LoginResult result;
         ArchipelagoSession session = null;
@@ -97,7 +120,7 @@ public class ServerConnector : MonoBehaviour
         try
         {
             session = ArchipelagoSessionFactory.CreateSession(server, port);
-            result = session.TryConnectAndLogin("Archipelamots", user, ItemsHandlingFlags.AllItems);
+            result = session.TryConnectAndLogin("Archipelamots", user, ItemsHandlingFlags.RemoteItems);
         }
         catch (Exception e)
         {

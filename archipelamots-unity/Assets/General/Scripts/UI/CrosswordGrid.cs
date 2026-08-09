@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.TextCore.Text;
@@ -22,12 +23,11 @@ public class CrosswordGrid : MonoBehaviour
 {
     public static CrosswordGrid Current { get; private set; }
 
-    [SerializeField] public GridLayoutGroup gridLayout;
+    [SerializeField] private TMP_Text nameText;
+    [SerializeField] private GridLayoutGroup gridLayout;
     [SerializeField] private LetterGridSquare letterGridSquarePrefab;
     [SerializeField] private DefinitionGridSquareFull definitionGridSquareFullPrefab;
     [SerializeField] private DefinitionGridSquareShared definitionGridSquareSharedPrefab;
-
-    [SerializeField] public List<ArrowSprite> arrowSprites = new List<ArrowSprite>();
 
     public int GridNb { get; private set; }
     public GridSquare[,] GridSquares { get; private set; }
@@ -35,6 +35,8 @@ public class CrosswordGrid : MonoBehaviour
     public GridSquare LastClicked { get; set; }
     public Direction CurrentDirection { get; private set; }
     public LetterGridSquare CurrentlySelected { get; set; }
+
+    public bool Initialized { get; private set; }
 
     // Necessary for static variables to work correctly when domain reload is disabled
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -85,8 +87,10 @@ public class CrosswordGrid : MonoBehaviour
 
     public virtual void Initialize(int gridNb)
     {
+        this.Initialized = true;
         this.gameObject.SetActive(true);
         this.GridNb = gridNb;
+        this.nameText.text = $"Grille n°{gridNb + 1}";
         int rowCount = YAMLLoader.Instance.Grids[gridNb].grid.Length;
         int colCount = YAMLLoader.Instance.Grids[gridNb].grid[0].Length;
         this.gridLayout.constraintCount = colCount;
@@ -134,7 +138,11 @@ public class CrosswordGrid : MonoBehaviour
             Destroy(square.gameObject);
         }
         this.Initialize(this.GridNb);
-        this.Select(this.CurrentlySelected);
+
+        if (this.CurrentlySelected != null)
+        {
+            this.Select(this.CurrentlySelected);
+        }
     }
 
     public void Reinitialize(int gridNb)
@@ -143,8 +151,8 @@ public class CrosswordGrid : MonoBehaviour
         {
             Destroy(square.gameObject);
         }
-        this.Initialize(gridNb);
         this.CurrentlySelected = null;
+        this.Initialize(gridNb);
     }
 
     public void SwitchDirection()
@@ -424,6 +432,7 @@ public class CrosswordGrid : MonoBehaviour
         LetterGridSquare lastValidLetter = gridSquare;
         int r = gridSquare.R;
         int c = gridSquare.C;
+        Debug.Log($"FindFirstLetterOfWord (r{r}, c{c})");
         while (c >= 0 && r >= 0)
         {
             if (this.GridSquares[r, c] is LetterGridSquare)

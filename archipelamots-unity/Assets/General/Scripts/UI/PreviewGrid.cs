@@ -4,7 +4,6 @@ using UnityEngine.UI;
 
 public class PreviewGrid : CrosswordGrid
 {
-    [SerializeField] private TMP_Text nameText;
     [SerializeField] private Button button;
     [SerializeField] private GameObject locked;
 
@@ -16,7 +15,6 @@ public class PreviewGrid : CrosswordGrid
     public override void Initialize(int gridNb)
     {
         base.Initialize(gridNb);
-        this.nameText.text = $"Grille n°{gridNb + 1}";
         bool locked = !ServerConnector.Instance.HasItem($"Grid n°{gridNb + 1}");
         this.locked.SetActive(locked);
         this.button.interactable = !locked && Current.GridNb != this.GridNb;
@@ -26,5 +24,6 @@ public class PreviewGrid : CrosswordGrid
     private void OnClick()
     {
         Current.Reinitialize(this.GridNb);
+        UI.Instance.GridSelector.Initialize();
     }
 }

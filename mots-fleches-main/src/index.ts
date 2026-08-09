@@ -27,3 +27,13 @@ export function getAllWords(): string[] {
   const c = loadCorpus();
   return [...c.easy, ...c.medium, ...c.hard];
 }
+
+export function getEasyWords(): string[] {
+    const c = loadCorpus();
+    return [...c.easy];
+}
+
+export function getEasyAndMediumWords(): string[] {
+    const c = loadCorpus();
+    return [...c.easy, ...c.medium];
+}

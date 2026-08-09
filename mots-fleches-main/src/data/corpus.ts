@@ -30,6 +30,11 @@ const acronyms = [
   'CDI', 'CDD',  'RDV'
 ];
 
+const forbiddenWords = [
+  'NEGRE', 'NEGRES', 'NEGRESSE', 'NEGRESSES', 'PEDE', 'PEDES', 'NEGRO', 'NEGROS', 'ENCULE', 'ENCULES', 'ENCULER', 'ATTARDE', 'ATTARDES', 'ATTARDEE', 'ATTARDEES', 'GOUINE', 'GOUINES',
+  'METEQUE', 'METEQUES',
+];
+
 const data = fs.readFileSync('Lexique383.tsv', 'utf-8');
 const lines = data.split('\n');
 const headers = lines[0].split('\t');
@@ -71,6 +76,8 @@ for (const line of lines.slice(1)) {
   const word = stripAccents(ortho).toUpperCase();
   if (!/^[A-Z]+$/.test(word)) continue;
   if (word.length !== nblettres) continue;
+
+  if (forbiddenWords.includes(word)) continue;
 
   const prev = seen.get(word);
   if (!prev || prev.freqfilms2 < freqfilms2) {

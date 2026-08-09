@@ -22,7 +22,7 @@ class TotalNbOfGrids(Range):
 
     display_name = "Total number of grids"
 
-    range_start = 0
+    range_start = 1
     range_end = 100
     default = 20
     
@@ -30,7 +30,7 @@ class PercentageOfGridsToWin(Range):
 
     display_name = "Percentage of grids that need to be completed"
 
-    range_start = 0
+    range_start = 1
     range_end = 100
     default = 80
     
@@ -46,7 +46,7 @@ class NbOfStartingGrids(Range):
     
     display_name = "Number of grids unlocked at start"
 
-    range_start = 0
+    range_start = 1
     range_end = 100
     default = 3
 
@@ -57,8 +57,22 @@ class PercentageOfDefinitionsUnlockedAtStart(Range):
     range_end = 100
     default = 30
 
+class LetterRevealsPerGrid(Range):
+    display_name = "Number of 'Letter Reveal' powers per grid"
+
+    range_start = 0
+    range_end = 10
+    default = 5
+
+class WordChecksPerGrid(Range):
+    display_name = "Number of 'Word Check' powers per grid"
+
+    range_start = 0
+    range_end = 10
+    default = 3
+
 class GridData(FreeText):
-    Visibility = Visibility.none
+    visibility = Visibility.none
 
 # We must now define a dataclass inheriting from PerGameCommonOptions that we put all our options in.
 # This is in the format "option_name_in_snake_case: OptionClassName".
@@ -69,4 +83,6 @@ class ArchipelamotsOptions(PerGameCommonOptions):
     nb_of_checks_per_grid: NbOfChecksPerGrid
     nb_of_starting_grids: NbOfStartingGrids
     percentage_of_definitions_unlocked_at_start: PercentageOfDefinitionsUnlockedAtStart
+    letter_reveals_per_grid: LetterRevealsPerGrid
+    word_checks_per_grid: WordChecksPerGrid
     grid_data: GridData
