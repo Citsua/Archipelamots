@@ -84,22 +84,26 @@ public class ServerConnector : MonoBehaviour
         SavingUtility.ReceiveItem(ref this.itemsReceived, info);
     }
 
-    public void SendLocationCheck(string name)
+    public bool SendLocationCheck(string name)
     {
         long id = this.session.Locations.GetLocationIdFromName("Archipelamots", name);
         if (this.session.Locations.AllLocationsChecked.Contains(id))
-            return;
+            return false;
 
         Debug.Log($"Completed Check '{name}' (id '{id}')");
         this.StartCoroutine(this.CScoutLocation(id));
         this.session.Locations.CompleteLocationChecks(id);
+        return true;
     }
 
     private IEnumerator CScoutLocation(long id)
     {
         var task = this.session.Locations.ScoutLocationsAsync(HintCreationPolicy.None, id);
         yield return new WaitUntil(() => task.IsCompleted);
-        UI.Instance.NotificationLog.SendLocation(task.Result[id].ItemName, task.Result[id].Player);
+        foreach (var item in task.Result)
+        {
+            UI.Instance.NotificationLog.SendLocation(task.Result[id].ItemName, task.Result[id].Player);
+        }
     }
 
     private ArchipelagoSession Connect(string server, int port, string user, string password)

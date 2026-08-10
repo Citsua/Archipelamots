@@ -1,3 +1,5 @@
+using Coffee.UIExtensions;
+using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -28,6 +30,7 @@ public class CrosswordGrid : MonoBehaviour
     [SerializeField] private LetterGridSquare letterGridSquarePrefab;
     [SerializeField] private DefinitionGridSquareFull definitionGridSquareFullPrefab;
     [SerializeField] private DefinitionGridSquareShared definitionGridSquareSharedPrefab;
+    [SerializeField] private UIParticle gridCompletedVFX;
 
     public int GridNb { get; private set; }
     public GridSquare[,] GridSquares { get; private set; }
@@ -133,14 +136,19 @@ public class CrosswordGrid : MonoBehaviour
 
     public void Reinitialize()
     {
+        bool isSquareSelected = this.CurrentlySelected != null;
+        int r = isSquareSelected ? this.CurrentlySelected.R : 0;
+        int c = isSquareSelected ? this.CurrentlySelected.C : 0;
+
         foreach (GridSquare square in this.GridSquares)
         {
             Destroy(square.gameObject);
         }
         this.Initialize(this.GridNb);
 
-        if (this.CurrentlySelected != null)
+        if (isSquareSelected)
         {
+            this.CurrentlySelected = this.GridSquares[r, c] as LetterGridSquare;
             this.Select(this.CurrentlySelected);
         }
     }
@@ -210,7 +218,7 @@ public class CrosswordGrid : MonoBehaviour
         else
             r += direction;
 
-        while (c >= 0 && c < this.GridSquares.GetLength(0) && r >= 0 && r < this.GridSquares.GetLength(1))
+        while (c >= 0 && c < this.GridSquares.GetLength(1) && r >= 0 && r < this.GridSquares.GetLength(0))
         {
             if (this.GridSquares[r, c] is LetterGridSquare)
             {
@@ -395,7 +403,6 @@ public class CrosswordGrid : MonoBehaviour
             }
         }
 
-        // TODO particles and shit
         if (allCorrect)
         {
             foreach (GridSquare gridSquare in this.GridSquares)
@@ -407,9 +414,16 @@ public class CrosswordGrid : MonoBehaviour
                 }
             }
 
+            bool firstTimeFinishing = false;
             for (int i = 0; i < YAMLLoader.Instance.YAML.Archipelamots.nb_of_checks_per_grid; i++)
             {
-                ServerConnector.Instance.SendLocationCheck($"Complete Grid n°{this.GridNb + 1} ({i + 1})");
+                if (ServerConnector.Instance.SendLocationCheck($"Complete Grid n°{this.GridNb + 1} ({i + 1})"))
+                    firstTimeFinishing = true;
+            }
+
+            if (firstTimeFinishing)
+            {
+                Instantiate(this.gridCompletedVFX, this.gridLayout.transform.parent);
             }
         }
     }
@@ -457,7 +471,7 @@ public class CrosswordGrid : MonoBehaviour
     {
         int r = startR;
         int c = startC;
-        int length = direction == Direction.Horizontal ? this.GridSquares.GetLength(0) : this.GridSquares.GetLength(1);
+        int length = direction == Direction.Horizontal ? this.GridSquares.GetLength(1) : this.GridSquares.GetLength(0);
         ref int coord = ref direction == Direction.Horizontal ? ref c : ref r;
         for (; coord < length; coord++)
         {

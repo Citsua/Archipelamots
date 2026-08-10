@@ -98,4 +98,48 @@ public static class Utility
             list[n] = value;
         }
     }
+
+    /// <summary>
+    /// Starts a particle system and its children
+    /// </summary>
+    /// <param name="component"></param>
+    public static void StartParticles(this Component component)
+    {
+        List<ParticleSystem> particles = component.GetComponentsInChildren<ParticleSystem>().ToList();
+        foreach (ParticleSystem particle in particles)
+            particle.Play(false);
+    }
+
+    /// <summary>
+    /// Stops a particle system and its children
+    /// </summary>
+    /// <param name="component"></param>
+    public static void StopParticles(this Component component)
+    {
+        List<ParticleSystem> particles = component.GetComponentsInChildren<ParticleSystem>().ToList();
+        foreach (ParticleSystem particle in particles)
+        {
+            particle.Stop(false, ParticleSystemStopBehavior.StopEmitting);
+            ParticleSystem.MainModule main = particle.main;
+            main.ringBufferMode = ParticleSystemRingBufferMode.Disabled;
+        }
+    }
+
+    /// <summary>
+    /// Starts a particle system and its children
+    /// </summary>
+    /// <param name="obj"></param>
+    public static void StartParticles(this GameObject obj)
+    {
+        StartParticles(obj.transform);
+    }
+
+    /// <summary>
+    /// Stops a particle system and its children
+    /// </summary>
+    /// <param name="obj"></param>
+    public static void StopParticles(this GameObject obj)
+    {
+        StopParticles(obj.transform);
+    }
 }

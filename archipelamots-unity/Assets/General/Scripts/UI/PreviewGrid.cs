@@ -25,5 +25,6 @@ public class PreviewGrid : CrosswordGrid
     {
         Current.Reinitialize(this.GridNb);
         UI.Instance.GridSelector.Initialize();
+        UI.Instance.ResetZoomAndPan();
     }
 }

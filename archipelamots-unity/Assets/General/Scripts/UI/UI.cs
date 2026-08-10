@@ -1,5 +1,6 @@
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
+using System.Reflection;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -32,8 +33,11 @@ public class UI : MonoBehaviour
             return this.holdingLeftClick && this.hasMovedDuringPanning;
         }
     }
+
+    private RectTransform canvas;
     private bool holdingLeftClick;
     private bool hasMovedDuringPanning;
+    private Vector2 initialDragPosition;
 
     // Necessary for static variables to work correctly when domain reload is disabled
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -48,6 +52,7 @@ public class UI : MonoBehaviour
             throw new System.Exception($"{this.GetType()} Singleton already exists in the scene");
         Instance = this;
 
+        this.canvas = this.GetComponentInParent<Canvas>().GetComponent<RectTransform>();
         this.Connection = FindFirstObjectByType<ConnectionUI>(FindObjectsInactive.Include);
         this.GridSelector = FindFirstObjectByType<GridSelectorUI>(FindObjectsInactive.Include);
         this.NotificationLog = FindFirstObjectByType<NotificationLogUI>(FindObjectsInactive.Include);
@@ -96,8 +101,10 @@ public class UI : MonoBehaviour
                 if (this.hasMovedDuringPanning || mouseDelta.magnitude > 1f)
                 {
                     this.hasMovedDuringPanning = true;
-                    float xLimit = (Screen.width - this.gridLayout.sizeDelta.x * this.gridZoomLimits.x) / 2f;
-                    float yLimit = (Screen.height - this.gridLayout.sizeDelta.y * this.gridZoomLimits.x) / 2f;
+                    /*RectTransformUtility.ScreenPointToLocalPointInRectangle(this.gridLayout, Mouse.current.position.value, Camera.main, out Vector2 dragPosition);
+                    this.gridScaler.anchoredPosition = dragPosition - this.initialDragPosition;*/
+                    float xLimit = (this.canvas.sizeDelta.x) / 2f;
+                    float yLimit = (this.canvas.sizeDelta.y) / 2f;
                     this.gridScaler.transform.localPosition = new Vector3(
                         Mathf.Clamp(this.gridScaler.transform.localPosition.x + mouseDelta.x * this.panSpeed, -xLimit, xLimit),
                         Mathf.Clamp(this.gridScaler.transform.localPosition.y + mouseDelta.y * this.panSpeed, -yLimit, yLimit),
@@ -111,6 +118,7 @@ public class UI : MonoBehaviour
             {
                 this.holdingLeftClick = true;
                 this.hasMovedDuringPanning = false;
+                //RectTransformUtility.ScreenPointToLocalPointInRectangle(this.gridLayout, Mouse.current.position.value, Camera.main, out this.initialDragPosition);
             }
         }
     }
@@ -121,6 +129,12 @@ public class UI : MonoBehaviour
         this.wordCheckButtonNumber.text = SavingUtility.GetNumberOfWordChecks().ToString();
         this.letterRevealButton.interactable = this.CanUseLetterRevealPower();
         this.wordCheckButton.interactable = this.CanUseWordCheckPower();
+    }
+
+    public void ResetZoomAndPan()
+    {
+        this.gridScaler.transform.localPosition = Vector3.zero;
+        this.gridScaler.localScale = Vector3.one;
     }
 
     private bool CanUseLetterRevealPower()

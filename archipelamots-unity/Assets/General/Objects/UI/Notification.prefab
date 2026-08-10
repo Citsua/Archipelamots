@@ -151,7 +151,7 @@ MonoBehaviour:
     duration: 1.5
     ease: 9
     elasticity: 0
-  displayDuration: 6
+  displayDuration: 8
 --- !u!225 &8302575131398624924
 CanvasGroup:
   m_ObjectHideFlags: 0

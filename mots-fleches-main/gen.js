@@ -60,7 +60,6 @@ for (var i = 0; i < doc.Archipelamots.total_nb_of_grids; i++) {
     while (result == null) {
       result = generate(words, gridSize[0], gridSize[1]);
     }
-    console.log(result);
 
     var defCellsArray = [];
     for (let [key, value] of result.defCells.entries()) {
@@ -102,7 +101,6 @@ for (var i = 0; i < doc.Archipelamots.total_nb_of_grids; i++) {
 
         var randomDefinition = definitions[getRandomInt(0, definitions.length - 1)];
         result.definitions.push({ word: word, definition: randomDefinition, revealed: preRevealedDefinitions.includes(result.definitions.length) });
-        console.log(`${word}: ${randomDefinition}`);
       } catch (error) {
         console.error(error);
         correct = false;
@@ -111,17 +109,18 @@ for (var i = 0; i < doc.Archipelamots.total_nb_of_grids; i++) {
     }
 
     if (correct) {
+      console.log("generated grid");
       grids.push(result);
     }
 
   } while (!correct);
 }
 
-console.log("generated all grids")
+console.log("generated all grids");
 
 // add the grids into the yaml
 doc.Archipelamots["grid_data"] = dump(grids);
-console.log(util.inspect(doc, {showHidden: false, depth: null, colors: true}))
+//console.log(util.inspect(doc, {showHidden: false, depth: null, colors: true}))
 var newFilePath = `${filePath.substring(0, filePath.indexOf('.yaml'))}-generated.yaml`;
 writeFileSync(newFilePath, dump(doc), (err) => {
     if (err) {
